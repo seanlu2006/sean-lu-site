@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sean Lu</title>
+<meta name="description" content="元智資管大二。用 $0 成本的工具和自動化，把自己養活。Sophomore at Yuan Ze University building tools that cost nothing to run.">
+<meta property="og:title" content="Sean Lu">
+<meta property="og:description" content="Builder · Trader · Student at Yuan Ze University">
+<meta property="og:image" content="avatar-400.png">
+<link rel="icon" href="avatar-400.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F8;
+    --ink:#14213A;
+    --ink-2:#4C566A;
+    --rule:#D3D9E2;
+    --gold:#A67C1F;
+    --gold-soft:#F1E8D2;
+    --measure:42rem;
+    --font:"IBM Plex Sans","Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.65;-webkit-text-size-adjust:100%}
+  body{margin:0}
+  a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.18em;text-decoration-thickness:1.5px}
+  a:hover{color:var(--gold)}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+
+  /* language switching */
+  .en{display:none}
+  html[lang="en"] .zh{display:none}
+  html[lang="en"] .en{display:inline}
+  html[lang="en"] p.en, html[lang="en"] div.en, html[lang="en"] h1.en, html[lang="en"] h2.en, html[lang="en"] summary.en, html[lang="en"] dd.en, html[lang="en"] dt.en{display:block}
+  html[lang="en"] span.en{display:inline}
+  html[lang="en"] li.en{display:list-item}
+
+  .wrap{max-width:var(--measure);margin:0 auto;padding:0 1.25rem}
+
+  header.top{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0 0}
+  header.top .mark{font-weight:600;letter-spacing:.01em;text-decoration:none}
+  .lang{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:2px;background:#fff}
+  .lang button{font:inherit;font-size:.85rem;border:0;background:transparent;color:var(--ink-2);padding:.2rem .7rem;border-radius:999px;cursor:pointer}
+  .lang button[aria-pressed="true"]{background:var(--ink);color:#fff}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center;padding:3.5rem 0 2.5rem}
+  .hero img{width:128px;height:128px;border-radius:50%;display:block;box-shadow:0 0 0 4px #fff,0 0 0 5px var(--rule)}
+  .hero h1{font-size:2rem;line-height:1.15;margin:0 0 .35rem;font-weight:600;letter-spacing:-.01em}
+  .hero p{margin:0;font-size:1.1rem;color:var(--ink-2);max-width:32ch}
+
+
+  section{padding:0 0 2.75rem}
+  h2{font-size:1.05rem;font-weight:600;margin:0 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);letter-spacing:.01em}
+  p{margin:0 0 1rem}
+  ul{padding-left:1.2rem;margin:0 0 1rem}
+  li{margin-bottom:.35rem}
+  .tracks li strong{font-weight:600}
+
+  /* projects */
+  .project{border:1px solid var(--rule);background:#fff;border-radius:6px;margin-bottom:.9rem}
+  .project summary{list-style:none;cursor:pointer;padding:.95rem 1.1rem;display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:baseline}
+  .project summary::-webkit-details-marker{display:none}
+  .project summary .name{font-weight:600}
+  .project summary .tag{font-size:.8rem;color:var(--ink-2);white-space:nowrap}
+  .project summary .line{grid-column:1/-1;color:var(--ink-2);margin:0}
+  .project summary:hover .name{color:var(--gold)}
+  .project .body{padding:0 1.1rem 1.1rem;border-top:1px solid var(--rule)}
+  .project .body dl{margin:1rem 0 0}
+  .project .body dt{font-weight:600;margin-top:.7rem}
+  .project .body dd{margin:.15rem 0 0;color:var(--ink-2)}
+  .project .links{margin:1rem 0 0;display:flex;gap:1.2rem;flex-wrap:wrap;font-size:.95rem}
+  .project[open] summary{border-bottom:0}
+  .more{margin-top:1.6rem}
+  .more li span.tag{color:var(--ink-2);font-size:.85rem}
+
+  .now .stamp{font-size:.85rem;color:var(--ink-2);margin-bottom:.6rem}
+
+  .contact ul{list-style:none;padding:0}
+  .contact li{display:grid;grid-template-columns:6.5rem 1fr;gap:1rem;padding:.4rem 0;border-bottom:1px dotted var(--rule)}
+  .contact li span:first-child{color:var(--ink-2)}
+  .contact li a{word-break:break-all}
+
+  footer{padding:2rem 0 3rem;font-size:.85rem;color:var(--ink-2);border-top:1px solid var(--rule)}
+
+  @media (max-width:520px){
+    html{font-size:16px}
+    .hero{grid-template-columns:1fr;gap:1.1rem;padding-top:2.5rem}
+    .hero img{width:104px;height:104px}
+    .hero h1{font-size:1.7rem}
+    .contact li{grid-template-columns:1fr;gap:.1rem}
+    .project summary{grid-template-columns:1fr}
+    .project summary .tag{white-space:normal}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .lang button{transition:background .15s}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <a class="mark" href="#">Sean Lu</a>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="zh-Hant" aria-pressed="true">中文</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<div class="hero">
+  <picture>
+    <source srcset="avatar.webp" type="image/webp">
+    <img src="avatar-400.png" alt="Sean Lu" width="128" height="128">
+  </picture>
+  <div>
+    <h1>Sean Lu</h1>
+    <p class="zh">元智資管大二。用 $0 成本的工具和自動化，把自己養活。</p>
+    <p class="en">Sophomore in Information Management at Yuan Ze University, Taiwan. I build tools and automation that cost nothing to run, so I can support myself.</p>
+  </div>
+</div>
+
+<section id="about">
+  <h2><span class="zh">關於我</span><span class="en">About</span></h2>
+  <p class="zh">我是 Sean，元智大學資訊管理學系大二，預計 2029 年畢業，住在桃園、學校附近。持有 Anthropic Claude 101 認證（2026 年 7 月）。校內參加閱人社和資管系排球隊。</p>
+  <p class="en">I'm Sean, a second-year Information Management student at Yuan Ze University (元智大學) in Taiwan, graduating in 2029. I live in Taoyuan, near campus. I hold Anthropic's Claude 101 certification (July 2026). On campus I'm in the 閱人社 club and the IM department volleyball team.</p>
+</section>
+
+<section id="tracks">
+  <h2><span class="zh">正在做的事</span><span class="en">What I'm working on</span></h2>
+  <ul class="tracks">
+    <li class="zh"><strong>XAUUSD 裁量交易</strong>——有規則框架的裁量交易，持續把主觀邏輯量化、驗證。</li>
+    <li class="en"><strong>XAUUSD discretionary trading</strong> — rules-based discretionary trading, with ongoing work on quantifying and validating the subjective parts.</li>
+    <li class="zh"><strong>英文 X 帳號</strong>——自我成長與生活方式主題，練習英文寫作與經營受眾。<a href="https://x.com/minhososerious">@minhososerious</a></li>
+    <li class="en"><strong>An English-language X account</strong> — self-improvement and lifestyle, where I practise writing in English and growing an audience. <a href="https://x.com/minhososerious">@minhososerious</a></li>
+  </ul>
+  <p class="zh">目標很直接：在家裡還支持我的這幾年，先做到經濟上自給自足。</p>
+  <p class="en">The goal is plain: become financially self-sufficient while my family is still supporting me.</p>
+</section>
+
+<section id="skills">
+  <h2><span class="zh">技術背景</span><span class="en">Technical background</span></h2>
+  <ul>
+    <li class="zh">課程：C#、微積分（無窮級數）、資訊安全、多媒體</li>
+    <li class="en">Coursework: C#, calculus (infinite series), cybersecurity, multimedia</li>
+    <li class="zh">實作：Python、Playwright、Shell、ffmpeg、Cloudflare Pages、TradingView Pine Script</li>
+    <li class="en">Hands-on: Python, Playwright, Shell, ffmpeg, Cloudflare Pages, TradingView Pine Script</li>
+    <li class="zh">AI 工程：Claude Code 治理設計——分層 CLAUDE.md、模型調度規則、subagent 配置、以檔案為基礎的機構記憶</li>
+    <li class="en">AI engineering: Claude Code governance — layered CLAUDE.md files, model dispatch rules, subagent configuration, file-based institutional memory</li>
+  </ul>
+</section>
+
+<section id="projects">
+  <h2><span class="zh">作品</span><span class="en">Projects</span></h2>
+
+  <details class="project">
+    <summary>
+      <span class="name">考場筆記 · Personal IELTS Desk</span>
+      <span class="tag">Cloudflare Pages · Gemini · Web Speech</span>
+      <p class="line zh">繁中 IELTS 自學系統——單字庫、Leitner 五盒複習、AI 模擬題、錯題本、寫作評分、每日規劃。</p>
+      <p class="line en">A Traditional-Chinese IELTS study desk — vocabulary bank, Leitner review, AI mock questions, mistake notebook, band-descriptor marking, daily planner.</p>
+    </summary>
+    <div class="body">
+      <dl>
+        <dt class="zh">問題</dt><dd class="zh">市面 IELTS 工具要付費、要帳號、資料不在自己手上。</dd>
+        <dt class="en">Problem</dt><dd class="en">Existing IELTS tools cost money, require an account, and keep your data.</dd>
+        <dt class="zh">解法</dt><dd class="zh">全部跑在瀏覽器。API key 存 localStorage，資料可匯出 JSON，雲端同步是選配。</dd>
+        <dt class="en">Approach</dt><dd class="en">Everything runs in the browser. The API key lives in localStorage, data exports as JSON, cloud sync is optional.</dd>
+        <dt class="zh">取捨</dt><dd class="zh">瀏覽器端呼叫 Gemini 而不是自架後端——零伺服器成本，代價是使用者要自己申請 key。Leitner 而不是 SM-2——簡單到使用者看得懂自己在哪一盒。</dd>
+        <dt class="en">Trade-offs</dt><dd class="en">Calling Gemini client-side instead of running a backend — zero server cost, at the price of users bringing their own key. Leitner instead of SM-2 — simple enough that you can see which box you're in.</dd>
+        <dt class="zh">學到</dt><dd class="zh">動態模型探索比寫死模型名稱耐用；給 Claude Code 的交接包讓後續迭代成本大幅下降。</dd>
+        <dt class="en">Learned</dt><dd class="en">Dynamic model discovery outlasts hardcoded model names. A handoff package for Claude Code made later iterations far cheaper.</dd>
+      </dl>
+      <p class="links"><a href="https://ielts-study-desk.pages.dev">ielts-study-desk.pages.dev</a><a href="https://github.com/seanlu2006/ielts-study-desk">GitHub</a></p>
+    </div>
+  </details>
+
+  <details class="project">
+    <summary>
+      <span class="name">vid-for-agents</span>
+      <span class="tag">Shell · ffmpeg · whisper.cpp</span>
+      <p class="line zh">一行指令把任何影片變成取樣畫格 + 本地逐字稿，讓 AI coding agent 能「看」影片。</p>
+      <p class="line en">One command turns any video into sampled frames plus a local transcript, so AI coding agents can read it.</p>
+    </summary>
+    <div class="body">
+      <dl>
+        <dt class="zh">問題</dt><dd class="zh">Agent 只能讀文字。影片教學、螢幕錄影對它們是黑盒。</dd>
+        <dt class="en">Problem</dt><dd class="en">Agents read text. Video tutorials and screen recordings are a black box to them.</dd>
+        <dt class="zh">解法</dt><dd class="zh">把影片降維成 agent 讀得懂的兩種東西：畫格和文字。</dd>
+        <dt class="en">Approach</dt><dd class="en">Reduce the video to the two things an agent can read: frames and text.</dd>
+        <dt class="zh">取捨</dt><dd class="zh">本地 whisper.cpp 而不是雲端語音辨識——慢一點，但不用 key、不上傳、$0。</dd>
+        <dt class="en">Trade-offs</dt><dd class="en">Local whisper.cpp instead of cloud speech-to-text — slower, but no key, no upload, $0.</dd>
+      </dl>
+      <p class="links"><a href="https://github.com/seanlu2006/vid-for-agents">GitHub</a></p>
+    </div>
+  </details>
+
+  <details class="project">
+    <summary>
+      <span class="name">CountAgent</span>
+      <span class="tag">Claude Code · iOS Shortcuts</span>
+      <p class="line zh">跑在 Claude Code 上的個人記帳 agent。Siri 往檔案追加一行純文字，agent 之後負責解析、分類、去重。</p>
+      <p class="line en">A personal bookkeeping agent on Claude Code. Siri appends one line of plain text; the agent later parses, categorises and dedupes.</p>
+    </summary>
+    <div class="body">
+      <dl>
+        <dt class="zh">問題</dt><dd class="zh">記帳 app 的摩擦在輸入。開 app、選類別、填金額，三步就放棄。</dd>
+        <dt class="en">Problem</dt><dd class="en">The friction in expense apps is input. Open the app, pick a category, type the amount — three steps and you quit.</dd>
+        <dt class="zh">解法</dt><dd class="zh">輸入端只剩一句話，理解交給 agent 批次處理。</dd>
+        <dt class="en">Approach</dt><dd class="en">Input shrinks to one sentence. Understanding is handed to the agent in batches.</dd>
+        <dt class="zh">取捨</dt><dd class="zh">行為寫成自然語言 CLAUDE.md 而不是程式碼——改規則不用改 code，代價是行為不完全確定，所以保留人工審核。</dd>
+        <dt class="en">Trade-offs</dt><dd class="en">Behaviour is written as a natural-language CLAUDE.md, not code — rules change without a code change, at the price of non-determinism, so a human review step stays.</dd>
+      </dl>
+      <p class="links"><a href="https://github.com/seanlu2006/CountAgent">GitHub</a></p>
+    </div>
+  </details>
+
+  <ul class="more">
+    <li class="zh">Telegram → Groq → Obsidian 知識擷取管線——手機隨手記，自動豐富化後同步進 Obsidian，人工決定留不留。<span class="tag">Python · GitHub Actions · iOS Shortcuts</span></li>
+    <li class="en">Telegram → Groq → Obsidian capture pipeline — jot on the phone, auto-enrich, sync into Obsidian, human decides what stays. <span class="tag">Python · GitHub Actions · iOS Shortcuts</span></li>
+    <li class="zh">Threads 影片下載器——Python 小工具。</li>
+    <li class="en">Threads video downloader — a small Python tool.</li>
+    <li class="zh">更多在 <a href="https://github.com/seanlu2006">GitHub</a>。</li>
+    <li class="en">More on <a href="https://github.com/seanlu2006">GitHub</a>.</li>
+  </ul>
+</section>
+
+<section id="now" class="now">
+  <h2><span class="zh">這個月</span><span class="en">This month</span></h2>
+  <p class="stamp zh">2026 年 9 月</p>
+  <p class="stamp en">September 2026</p>
+  <ul>
+    <li class="zh">大二開學</li>
+    <li class="en">Starting sophomore year</li>
+    <li class="zh">申請 Anthropic Claude Campus Ambassador 2026（Builder Club 軌，元智）</li>
+    <li class="en">Applying to Anthropic's Claude Campus Ambassador Program 2026 (Builder Club track, Yuan Ze)</li>
+    <li class="zh">持續交易日誌與 MAE/MFE 紀錄</li>
+    <li class="en">Ongoing trade journaling with MAE/MFE logging</li>
+  </ul>
+</section>
+
+<section id="outside">
+  <h2><span class="zh">工作之外</span><span class="en">Outside work</span></h2>
+  <p class="zh">哲學和知識論。在乎遊戲和電影的敘事品質。理想的一天裡有我的貓。</p>
+  <p class="en">Philosophy and epistemology. Narrative quality in games and film. My cat is part of the ideal day.</p>
+</section>
+
+<section id="contact" class="contact">
+  <h2><span class="zh">聯絡</span><span class="en">Contact</span></h2>
+  <p class="zh">合作、專案、或只是想聊聊——直接寫信。</p>
+  <p class="en">Collaborations, projects, or just a conversation — email works.</p>
+  <ul>
+    <li><span>Email</span><a href="mailto:seanlu2006@gmail.com">seanlu2006@gmail.com</a></li>
+    <li><span>GitHub</span><a href="https://github.com/seanlu2006">github.com/seanlu2006</a></li>
+    <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/sean-lu-34381936b">linkedin.com/in/sean-lu-34381936b</a></li>
+    <li><span>X</span><a href="https://x.com/minhososerious">x.com/minhososerious</a></li>
+  </ul>
+</section>
+
+<footer>
+  <span class="zh">Sean Lu · 桃園 · 一個 HTML 檔，跑在 Cloudflare Pages。</span>
+  <span class="en">Sean Lu · Taoyuan, Taiwan · One HTML file on Cloudflare Pages.</span>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var buttons=document.querySelectorAll('.lang button');
+  function setLang(l){
+    root.setAttribute('lang',l);
+    buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===l));});
+    try{localStorage.setItem('lang',l);}catch(e){}
+  }
+  buttons.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang);});});
+  var saved=null;
+  try{saved=localStorage.getItem('lang');}catch(e){}
+  if(saved==='en'||saved==='zh-Hant'){setLang(saved);}
+  else if(!/^zh/i.test(navigator.language||'')){setLang('en');}
+})();
+</script>
+</body>
+</html>
