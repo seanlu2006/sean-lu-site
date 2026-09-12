@@ -128,17 +128,17 @@
 
 <section id="about">
   <h2><span class="zh">關於我</span><span class="en">About</span></h2>
-  <p class="zh">我是 Sean，元智大學資訊管理學系大二，預計 2029 年畢業，住在桃園、學校附近。持有 Anthropic Claude 101 認證（2026 年 7 月）。校內參加閱人社和資管系排球隊。</p>
-  <p class="en">I'm Sean, a second-year Information Management student at Yuan Ze University (元智大學) in Taiwan, graduating in 2029. I live in Taoyuan, near campus. I hold Anthropic's Claude 101 certification (July 2026). On campus I'm in the 閱人社 club and the IM department volleyball team.</p>
+  <p class="zh">2029 年畢業，住在桃園、學校附近。持有 Anthropic Claude 101 認證（2026 年 7 月）。校內參加閱人社和資管系排球隊。</p>
+  <p class="en">I graduate in 2029 and live in Taoyuan, near campus. I hold Anthropic's Claude 101 certification (July 2026). On campus I'm in the 閱人社 club and the IM department volleyball team.</p>
 </section>
 
 <section id="tracks">
   <h2><span class="zh">正在做的事</span><span class="en">What I'm working on</span></h2>
   <ul class="tracks">
-    <li class="zh"><strong>XAUUSD 裁量交易</strong>——有規則框架的裁量交易，持續把主觀邏輯量化、驗證。</li>
-    <li class="en"><strong>XAUUSD discretionary trading</strong> — rules-based discretionary trading, with ongoing work on quantifying and validating the subjective parts.</li>
-    <li class="zh"><strong>英文 X 帳號</strong>——自我成長與生活方式主題，練習英文寫作與經營受眾。<a href="https://x.com/minhososerious">@minhososerious</a></li>
-    <li class="en"><strong>An English-language X account</strong> — self-improvement and lifestyle, where I practise writing in English and growing an audience. <a href="https://x.com/minhososerious">@minhososerious</a></li>
+    <li class="zh"><strong>XAUUSD 裁量交易</strong>。有規則框架，但判斷仍是主觀的。正在把那些主觀邏輯量化、驗證。</li>
+    <li class="en"><strong>XAUUSD discretionary trading</strong>. There is a rule framework, but the calls are still mine. I'm working on quantifying and validating the subjective parts.</li>
+    <li class="zh"><strong>英文 X 帳號</strong>。寫自我成長和生活方式。目的是練英文寫作，也想把讀者養起來。<a href="https://x.com/minhososerious">@minhososerious</a></li>
+    <li class="en"><strong>An English-language X account</strong>. Self-improvement and lifestyle. I'm there to practise writing in English, and to build a readership. <a href="https://x.com/minhososerious">@minhososerious</a></li>
   </ul>
   <p class="zh">目標很直接：在家裡還支持我的這幾年，先做到經濟上自給自足。</p>
   <p class="en">The goal is plain: become financially self-sufficient while my family is still supporting me.</p>
@@ -151,8 +151,8 @@
     <li class="en">Coursework: C#, calculus (infinite series), cybersecurity, multimedia</li>
     <li class="zh">實作：Python、Playwright、Shell、ffmpeg、Cloudflare Pages、TradingView Pine Script</li>
     <li class="en">Hands-on: Python, Playwright, Shell, ffmpeg, Cloudflare Pages, TradingView Pine Script</li>
-    <li class="zh">AI 工程：Claude Code 治理設計——分層 CLAUDE.md、模型調度規則、subagent 配置、以檔案為基礎的機構記憶</li>
-    <li class="en">AI engineering: Claude Code governance — layered CLAUDE.md files, model dispatch rules, subagent configuration, file-based institutional memory</li>
+    <li class="zh">AI 工程：Claude Code 的治理設計。分層 CLAUDE.md、模型調度規則、subagent 配置，記憶存成檔案</li>
+    <li class="en">AI engineering: Claude Code governance. Layered CLAUDE.md files, model dispatch rules, subagent configuration, memory kept in files</li>
   </ul>
 </section>
 
@@ -169,8 +169,8 @@
     <summary>
       <span class="name">考場筆記 · Personal IELTS Desk</span>
       <span class="tag">Cloudflare Pages · Gemini · Web Speech</span>
-      <p class="line zh">繁中 IELTS 自學系統——單字庫、Leitner 五盒複習、AI 模擬題、錯題本、寫作評分、每日規劃。</p>
-      <p class="line en">A Traditional-Chinese IELTS study desk — vocabulary bank, Leitner review, AI mock questions, mistake notebook, band-descriptor marking, daily planner.</p>
+      <p class="line zh">繁中 IELTS 自學系統。單字庫、Leitner 五盒複習、AI 模擬題、錯題本、寫作評分、每日規劃，全部跑在瀏覽器。</p>
+      <p class="line en">A Traditional-Chinese IELTS study desk. Vocabulary bank, Leitner review, AI mock questions, mistake notebook, band-descriptor marking and a daily planner, all running in the browser.</p>
     </summary>
     <div class="body">
       <dl>
@@ -178,9 +178,9 @@
         <dt class="en">Problem</dt><dd class="en">Existing IELTS tools cost money, require an account, and keep your data.</dd>
         <dt class="zh">解法</dt><dd class="zh">全部跑在瀏覽器。API key 存 localStorage，資料可匯出 JSON，雲端同步是選配。</dd>
         <dt class="en">Approach</dt><dd class="en">Everything runs in the browser. The API key lives in localStorage, data exports as JSON, cloud sync is optional.</dd>
-        <dt class="zh">取捨</dt><dd class="zh">瀏覽器端呼叫 Gemini 而不是自架後端——零伺服器成本，代價是使用者要自己申請 key。Leitner 而不是 SM-2——簡單到使用者看得懂自己在哪一盒。</dd>
-        <dt class="en">Trade-offs</dt><dd class="en">Calling Gemini client-side instead of running a backend — zero server cost, at the price of users bringing their own key. Leitner instead of SM-2 — simple enough that you can see which box you're in.</dd>
-        <dt class="zh">學到</dt><dd class="zh">動態模型探索比寫死模型名稱耐用；給 Claude Code 的交接包讓後續迭代成本大幅下降。</dd>
+        <dt class="zh">取捨</dt><dd class="zh">Gemini 直接從瀏覽器呼叫，沒有自己的後端。伺服器成本是零，代價是使用者得自己申請 key。複習演算法用 Leitner 不用 SM-2，因為使用者看得懂自己在第幾盒。</dd>
+        <dt class="en">Trade-offs</dt><dd class="en">Gemini is called straight from the browser, with no backend of my own. Server cost is zero; the price is that users bring their own key. The review algorithm is Leitner rather than SM-2, because you can see which box you're in.</dd>
+        <dt class="zh">學到</dt><dd class="zh">動態抓模型清單，比把模型名稱寫死耐用。另外寫了一份給 Claude Code 的交接包，後續迭代成本大幅下降。</dd>
         <dt class="en">Learned</dt><dd class="en">Dynamic model discovery outlasts hardcoded model names. A handoff package for Claude Code made later iterations far cheaper.</dd>
       </dl>
       <p class="links"><a href="https://ielts-study-desk.pages.dev">ielts-study-desk.pages.dev</a><a href="https://github.com/seanlu2006/ielts-study-desk">GitHub</a></p>
@@ -198,10 +198,10 @@
       <dl>
         <dt class="zh">問題</dt><dd class="zh">Agent 只能讀文字。影片教學、螢幕錄影對它們是黑盒。</dd>
         <dt class="en">Problem</dt><dd class="en">Agents read text. Video tutorials and screen recordings are a black box to them.</dd>
-        <dt class="zh">解法</dt><dd class="zh">把影片降維成 agent 讀得懂的兩種東西：畫格和文字。</dd>
+        <dt class="zh">解法</dt><dd class="zh">把影片拆成 agent 讀得懂的兩種東西：畫格和文字。</dd>
         <dt class="en">Approach</dt><dd class="en">Reduce the video to the two things an agent can read: frames and text.</dd>
-        <dt class="zh">取捨</dt><dd class="zh">本地 whisper.cpp 而不是雲端語音辨識——慢一點，但不用 key、不上傳、$0。</dd>
-        <dt class="en">Trade-offs</dt><dd class="en">Local whisper.cpp instead of cloud speech-to-text — slower, but no key, no upload, $0.</dd>
+        <dt class="zh">取捨</dt><dd class="zh">語音辨識跑本地 whisper.cpp。慢，但不用 key、不上傳、$0。</dd>
+        <dt class="en">Trade-offs</dt><dd class="en">Speech-to-text runs locally on whisper.cpp. Slower, but no key, no upload, $0.</dd>
       </dl>
       <p class="links"><a href="https://github.com/seanlu2006/vid-for-agents">GitHub</a></p>
     </div>
@@ -217,21 +217,21 @@
     <div class="body">
       <dl>
         <dt class="zh">問題</dt><dd class="zh">記帳 app 的摩擦在輸入。開 app、選類別、填金額，三步就放棄。</dd>
-        <dt class="en">Problem</dt><dd class="en">The friction in expense apps is input. Open the app, pick a category, type the amount — three steps and you quit.</dd>
+        <dt class="en">Problem</dt><dd class="en">The friction in expense apps is input. Open the app, pick a category, type the amount. Three steps and you quit.</dd>
         <dt class="zh">解法</dt><dd class="zh">輸入端只剩一句話，理解交給 agent 批次處理。</dd>
         <dt class="en">Approach</dt><dd class="en">Input shrinks to one sentence. Understanding is handed to the agent in batches.</dd>
-        <dt class="zh">取捨</dt><dd class="zh">行為寫成自然語言 CLAUDE.md 而不是程式碼——改規則不用改 code，代價是行為不完全確定，所以保留人工審核。</dd>
-        <dt class="en">Trade-offs</dt><dd class="en">Behaviour is written as a natural-language CLAUDE.md, not code — rules change without a code change, at the price of non-determinism, so a human review step stays.</dd>
+        <dt class="zh">取捨</dt><dd class="zh">行為寫在 CLAUDE.md 裡，是自然語言不是程式碼。改規則不用動 code。代價是行為不完全確定，所以保留人工審核那一關。</dd>
+        <dt class="en">Trade-offs</dt><dd class="en">Behaviour lives in a CLAUDE.md, written in plain language rather than code. Rules change without a code change. The price is non-determinism, so a human review step stays.</dd>
       </dl>
       <p class="links"><a href="https://github.com/seanlu2006/CountAgent">GitHub</a></p>
     </div>
   </details>
 
   <ul class="more">
-    <li class="zh">Telegram → Groq → Obsidian 知識擷取管線——手機隨手記，自動豐富化後同步進 Obsidian，人工決定留不留。<span class="tag">Python · GitHub Actions · iOS Shortcuts</span></li>
-    <li class="en">Telegram → Groq → Obsidian capture pipeline — jot on the phone, auto-enrich, sync into Obsidian, human decides what stays. <span class="tag">Python · GitHub Actions · iOS Shortcuts</span></li>
-    <li class="zh">Threads 影片下載器——Python 小工具。</li>
-    <li class="en">Threads video downloader — a small Python tool.</li>
+    <li class="zh">Telegram → Groq → Obsidian 知識擷取管線。手機隨手記一句，自動整理後同步進 Obsidian，留不留由我決定。<span class="tag">Python · GitHub Actions · iOS Shortcuts</span></li>
+    <li class="en">Telegram → Groq → Obsidian capture pipeline. Jot on the phone, it gets tidied up and synced into Obsidian, and I decide what stays. <span class="tag">Python · GitHub Actions · iOS Shortcuts</span></li>
+    <li class="zh">Threads 影片下載器，一個 Python 小工具。</li>
+    <li class="en">Threads video downloader, a small Python tool.</li>
     <li class="zh">更多在 <a href="https://github.com/seanlu2006">GitHub</a>。</li>
     <li class="en">More on <a href="https://github.com/seanlu2006">GitHub</a>.</li>
   </ul>
@@ -259,8 +259,8 @@
 
 <section id="contact" class="contact">
   <h2><span class="zh">聯絡</span><span class="en">Contact</span></h2>
-  <p class="zh">合作、專案、或只是想聊聊——直接寫信。</p>
-  <p class="en">Collaborations, projects, or just a conversation — email works.</p>
+  <p class="zh">合作、專案，或只是想聊聊。直接寫信。</p>
+  <p class="en">Collaborations, projects, or just a conversation. Email works.</p>
   <ul>
     <li><span>Email</span><a href="mailto:seanlu2006@gmail.com">seanlu2006@gmail.com</a></li>
     <li><span>GitHub</span><a href="https://github.com/seanlu2006">github.com/seanlu2006</a></li>
