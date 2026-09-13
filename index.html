@@ -13,7 +13,7 @@
 <link rel="icon" href="avatar-400.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#F3F5F8;
@@ -21,15 +21,28 @@
     --ink-2:#4C566A;
     --rule:#D3D9E2;
     --gold:#A67C1F;
-    --gold-soft:#F1E8D2;
+    --surface:#FFFFFF;
+    --on-ink:#FFFFFF;
     --measure:42rem;
     --font:"IBM Plex Sans","Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#10151F;
+      --ink:#E4E8EE;
+      --ink-2:#A2ACBB;
+      --rule:#2B3445;
+      --gold:#D1A549;
+      --surface:#171E2B;
+      --on-ink:#10151F;
+    }
+    html{color-scheme:dark}
   }
   *{box-sizing:border-box}
   html{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.65;-webkit-text-size-adjust:100%}
   body{margin:0}
   a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.18em;text-decoration-thickness:1.5px}
-  a:hover{color:var(--gold)}
+  a:hover{text-decoration-thickness:3px}
   :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
 
   /* language switching */
@@ -44,19 +57,19 @@
 
   header.top{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0 0}
   header.top .mark{font-weight:600;letter-spacing:.01em;text-decoration:none}
-  .lang{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:2px;background:#fff}
-  .lang button{font:inherit;font-size:.85rem;border:0;background:transparent;color:var(--ink-2);padding:.2rem .7rem;border-radius:999px;cursor:pointer}
-  .lang button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .lang{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:2px;background:var(--surface)}
+  .lang button{font:inherit;font-size:.85rem;border:0;background:transparent;color:var(--ink-2);padding:0 .9rem;min-height:44px;border-radius:999px;cursor:pointer}
+  .lang button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
 
   /* hero */
   .hero{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center;padding:3.5rem 0 2.5rem}
-  .hero img{width:128px;height:128px;border-radius:50%;display:block;box-shadow:0 0 0 4px #fff,0 0 0 5px var(--rule)}
+  .hero img{width:128px;height:128px;border-radius:50%;display:block;box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--rule)}
   .hero h1{font-size:2rem;line-height:1.15;margin:0 0 .35rem;font-weight:600;letter-spacing:-.01em}
-  .hero p{margin:0;font-size:1.1rem;color:var(--ink-2);max-width:32ch}
+  .hero p{margin:0;font-size:1.1rem;color:var(--ink-2);word-break:keep-all;overflow-wrap:anywhere;text-wrap:pretty}
 
 
   section{padding:0 0 2.75rem}
-  h2{font-size:1.05rem;font-weight:600;margin:0 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);letter-spacing:.01em}
+  h2{font-size:1.25rem;font-weight:600;margin:0 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);letter-spacing:.01em}
   p{margin:0 0 1rem}
   ul{padding-left:1.2rem;margin:0 0 1rem}
   li{margin-bottom:.35rem}
@@ -64,14 +77,15 @@
   .rule strong{display:block;font-weight:600;margin-bottom:.1rem}
 
   /* projects */
-  .project{border:1px solid var(--rule);background:#fff;border-radius:6px;margin-bottom:.9rem}
+  .project{border:1px solid var(--rule);background:var(--surface);border-radius:6px;margin-bottom:.9rem}
   .project summary{list-style:none;cursor:pointer;padding:.95rem 1.1rem;display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:baseline}
   .project summary::-webkit-details-marker{display:none}
   .project summary .name{font-weight:600}
   .project summary .tag{font-size:.8rem;color:var(--ink-2);white-space:nowrap}
   .project summary .line{grid-column:1/-1;color:var(--ink-2);margin:0}
-  .project summary:hover .name{color:var(--gold)}
+  .project summary:hover .name{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.18em;text-decoration-thickness:2px}
   .project .body{padding:0 1.1rem 1.1rem;border-top:1px solid var(--rule)}
+  .project .shot{display:block;width:100%;height:auto;margin:1rem 0 0;border:1px solid var(--rule);border-radius:4px}
   .project .body dl{margin:1rem 0 0}
   .project .body dt{font-weight:600;margin-top:.7rem}
   .project .body dd{margin:.15rem 0 0;color:var(--ink-2)}
@@ -173,6 +187,7 @@
       <p class="line en">A Traditional-Chinese IELTS study desk. Vocabulary bank, Leitner review, AI mock questions, mistake notebook, band-descriptor marking and a daily planner, all running in the browser.</p>
     </summary>
     <div class="body">
+      <img class="shot" src="ielts-review.webp" width="1400" height="1000" loading="lazy" alt="考場筆記的今日複習頁：Leitner 五盒熟練度分布與翻卡 / Review page of the IELTS desk: Leitner box distribution and a flashcard">
       <dl>
         <dt class="zh">問題</dt><dd class="zh">市面 IELTS 工具要付費、要帳號、資料不在自己手上。</dd>
         <dt class="en">Problem</dt><dd class="en">Existing IELTS tools cost money, require an account, and keep your data.</dd>
