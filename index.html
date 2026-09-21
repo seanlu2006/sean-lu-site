@@ -93,7 +93,7 @@
           <p class="project-lede zh">繁中 IELTS 自學系統。單字庫、Leitner 五盒複習、AI 模擬題、錯題本、寫作評分、每日規劃，全部跑在瀏覽器。</p>
           <p class="project-lede en">A Traditional Chinese IELTS study desk. Vocabulary, Leitner review, AI mock questions, mistake notebook, writing feedback and daily planning, all in the browser.</p>
           <div class="project-links">
-            <a class="text-link" href="https://ielts-study-desk.pages.dev"><span class="zh">開啟作品</span><span class="en">Open demo</span><span aria-hidden="true">↗</span></a>
+            <a class="text-link" href="https://ielts-study-desk.pages.dev"><span class="zh">打開網站</span><span class="en">Open the app</span><span aria-hidden="true">↗</span></a>
             <a class="text-link" href="https://github.com/seanlu2006/ielts-study-desk">GitHub <span aria-hidden="true">↗</span></a>
           </div>
         </div>
@@ -116,12 +116,12 @@
             <div>
               <dt><span class="zh">取捨</span><span class="en">Trade-off</span></dt>
               <dd class="zh">Gemini 直接從瀏覽器呼叫，沒有自己的後端。伺服器成本是零，代價是使用者得自己申請 key。複習演算法用 Leitner 不用 SM-2，因為使用者看得懂自己在第幾盒。</dd>
-              <dd class="en">Gemini is called from the browser with no backend. Server cost is zero; users bring their own key. Leitner replaces SM-2 because each box is easy to understand.</dd>
+              <dd class="en">Gemini is called from the browser with no backend. Server cost is zero; users bring their own key. The review algorithm is Leitner rather than SM-2, because you can see which box you're in.</dd>
             </div>
             <div>
               <dt><span class="zh">學到</span><span class="en">Learned</span></dt>
               <dd class="zh">動態抓模型清單，比把模型名稱寫死耐用。另外寫了一份給 Claude Code 的交接包，之後再迭代就不必從頭交代專案。</dd>
-              <dd class="en">Dynamic model discovery outlasts hardcoded model names. A Claude Code handoff package means later iterations do not start from zero.</dd>
+              <dd class="en">Dynamic model discovery outlasts hardcoded model names. I also wrote a handoff package for Claude Code, so later iterations don't start from zero.</dd>
             </div>
           </dl>
         </details>
@@ -133,12 +133,12 @@
           <div class="project-main">
             <p class="project-kicker">Shell · ffmpeg · whisper.cpp</p>
             <h3>vid-for-agents</h3>
-            <p class="project-lede zh">一行指令把任何影片變成取樣畫格與本地逐字稿，讓 AI coding agent 能「看」影片。</p>
+            <p class="project-lede zh">一行指令把任何影片變成取樣畫格和本地逐字稿，讓 AI coding agent 能「看」影片。</p>
             <p class="project-lede en">One command turns video into sampled frames and a local transcript that coding agents can read.</p>
             <dl class="compact-notes">
               <div><dt><span class="zh">問題</span><span class="en">Problem</span></dt><dd class="zh">Agent 只能讀文字。影片教學、螢幕錄影對它們是黑盒。</dd><dd class="en">Agents read text. Video tutorials and screen recordings are a black box.</dd></div>
               <div><dt><span class="zh">解法</span><span class="en">Approach</span></dt><dd class="zh">把影片拆成 agent 讀得懂的兩種東西：畫格和文字。</dd><dd class="en">Reduce video to two things an agent can read: frames and text.</dd></div>
-              <div><dt><span class="zh">取捨</span><span class="en">Trade-off</span></dt><dd class="zh">語音辨識跑本地 whisper.cpp。慢，但不用 key、不上傳、$0。</dd><dd class="en">Speech recognition runs locally with whisper.cpp. Slower, but no key, upload or API cost.</dd></div>
+              <div><dt><span class="zh">取捨</span><span class="en">Trade-off</span></dt><dd class="zh">語音辨識跑本地 whisper.cpp。慢，但不用 key、不上傳、$0。</dd><dd class="en">Speech-to-text runs locally on whisper.cpp. Slower, but no key, no upload, $0.</dd></div>
             </dl>
             <a class="text-link" href="https://github.com/seanlu2006/vid-for-agents">GitHub <span aria-hidden="true">↗</span></a>
           </div>
@@ -165,9 +165,9 @@
             <p class="project-lede zh">跑在 Claude Code 上的個人記帳 agent。Siri 往檔案追加一行純文字，agent 之後負責解析、分類、去重。</p>
             <p class="project-lede en">A personal expense agent on Claude Code. Siri appends one line of text; the agent later parses, categorises and deduplicates it.</p>
             <dl class="compact-notes">
-              <div><dt><span class="zh">問題</span><span class="en">Problem</span></dt><dd class="zh">記帳 app 的摩擦在輸入。開 app、選類別、填金額，三步就放棄。</dd><dd class="en">The friction in expense apps is input: open the app, choose a category, enter the amount.</dd></div>
+              <div><dt><span class="zh">問題</span><span class="en">Problem</span></dt><dd class="zh">記帳 app 的摩擦在輸入。開 app、選類別、填金額，三步就放棄。</dd><dd class="en">The friction in expense apps is input. Open the app, pick a category, type the amount. Three steps and you quit.</dd></div>
               <div><dt><span class="zh">解法</span><span class="en">Approach</span></dt><dd class="zh">輸入端只剩一句話，理解交給 agent 批次處理。</dd><dd class="en">Capture shrinks to one sentence. The agent handles interpretation later.</dd></div>
-              <div><dt><span class="zh">取捨</span><span class="en">Trade-off</span></dt><dd class="zh">行為寫在 CLAUDE.md 裡。改規則不用動程式碼。代價是行為不完全確定，所以保留人工審核。</dd><dd class="en">Behaviour lives in CLAUDE.md, so rules change without code. Non-determinism remains, so human review stays.</dd></div>
+              <div><dt><span class="zh">取捨</span><span class="en">Trade-off</span></dt><dd class="zh">行為寫在 CLAUDE.md 裡。改規則不用動程式碼。代價是行為不完全確定，所以保留人工審核。</dd><dd class="en">Behaviour lives in CLAUDE.md, in plain language rather than code. Rules change without a code change. The price is non-determinism, so a human review step stays.</dd></div>
             </dl>
             <a class="text-link" href="https://github.com/seanlu2006/CountAgent">GitHub <span aria-hidden="true">↗</span></a>
           </div>
@@ -181,7 +181,7 @@
       <div class="small-work reveal">
         <h3><span class="zh">另外做過</span><span class="en">Also built</span></h3>
         <ul>
-          <li><span class="zh">Telegram → Groq → Obsidian 知識擷取管線。手機隨手記一句，自動整理後同步進 Obsidian，留不留由我決定。</span><span class="en">Telegram → Groq → Obsidian capture pipeline. Jot a line on the phone, sync the cleaned version, decide what stays.</span><small>Python · GitHub Actions · iOS Shortcuts</small></li>
+          <li><span class="zh">Telegram → Groq → Obsidian 知識擷取管線。手機隨手記一句，自動整理後同步進 Obsidian，留不留由我決定。</span><span class="en">Telegram → Groq → Obsidian capture pipeline. Jot a line on the phone; it gets tidied up and synced into Obsidian, and I decide what stays.</span><small>Python · GitHub Actions · iOS Shortcuts</small></li>
           <li><span class="zh">Threads 影片下載器，一個 Python 小工具。</span><span class="en">Threads video downloader, a small Python tool.</span><small>Python</small></li>
           <li><span class="zh">更多放在 GitHub。</span><span class="en">More work lives on GitHub.</span><a href="https://github.com/seanlu2006">github.com/seanlu2006 <span aria-hidden="true">↗</span></a></li>
         </ul>
@@ -196,16 +196,16 @@
       <div class="about-grid">
         <blockquote class="principle reveal">
           <p class="zh">「自己不用的工具，<br>不算做完。」</p>
-          <p class="en">“A tool I do not use myself is not finished.”</p>
+          <p class="en">“A tool I don't use myself isn't finished.”</p>
           <footer>
             <span class="zh">我只信自己感受過的需求。現在只做我真的缺、缺了會去解決的東西。</span>
-            <span class="en">I trust demand I have felt. Now I build what I genuinely lack and would otherwise fix by hand.</span>
+            <span class="en">I only trust demand I've felt. Now I build what I actually lack and would otherwise fix by hand.</span>
           </footer>
         </blockquote>
 
         <div class="bio reveal">
           <p class="zh">2029 年畢業，住在桃園、學校附近。2026 年 7 月完成 Anthropic 的 <a href="https://anthropic.skilljar.com/claude-101">Claude 101</a> 課程。校內參加閱人社和資管系排球隊。</p>
-          <p class="en">I graduate in 2029 and live near campus in Taoyuan. I completed Anthropic's <a href="https://anthropic.skilljar.com/claude-101">Claude 101</a> in July 2026. On campus, I am in the 閱人社 club and the IM department volleyball team.</p>
+          <p class="en">I graduate in 2029 and live near campus in Taoyuan. I completed Anthropic's <a href="https://anthropic.skilljar.com/claude-101">Claude 101</a> in July 2026. On campus I'm in the 閱人社 club and the IM department volleyball team.</p>
           <h3><span class="zh">技術背景</span><span class="en">Technical background</span></h3>
           <ul class="skill-list">
             <li><b><span class="zh">課程</span><span class="en">Coursework</span></b><span class="zh">C#、微積分（無窮級數）、資訊安全、多媒體</span><span class="en">C#, calculus (infinite series), cybersecurity, multimedia</span></li>
@@ -217,9 +217,9 @@
 
       <div class="now-grid reveal">
         <div>
-          <p class="micro-label"><span class="zh">正在做的事</span><span class="en">Current tracks</span></p>
+          <p class="micro-label"><span class="zh">正在做的事</span><span class="en">Working on</span></p>
           <ul class="now-list">
-            <li><strong><span class="zh">XAUUSD 裁量交易</span><span class="en">XAUUSD discretionary trading</span></strong><span class="zh">有規則框架，但判斷仍是主觀的。正在把那些主觀邏輯量化、驗證。</span><span class="en">There is a rule framework, but the calls are still mine. I am quantifying and validating the subjective parts.</span></li>
+            <li><strong><span class="zh">XAUUSD 裁量交易</span><span class="en">XAUUSD discretionary trading</span></strong><span class="zh">有規則框架，但判斷仍是主觀的。正在把那些主觀邏輯量化、驗證。</span><span class="en">There is a rule framework, but the calls are still mine. I'm working on quantifying and validating the subjective parts.</span></li>
             <li><strong><span class="zh">英文 X 帳號</span><span class="en">English-language X account</span></strong><span class="zh">寫自我成長和生活方式。練英文寫作，也想把讀者養起來。<a href="https://x.com/minhososerious">@minhososerious</a></span><span class="en">Self-improvement and lifestyle, for writing practice and building a readership. <a href="https://x.com/minhososerious">@minhososerious</a></span></li>
           </ul>
           <p class="plain-goal zh">目標很直接：在家裡還支持我的這幾年，先做到經濟上自給自足。</p>
