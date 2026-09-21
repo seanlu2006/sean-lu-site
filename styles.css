@@ -374,8 +374,10 @@ html[lang="en"] dd.en { display: block; }
 }
 
 /* WebKit lets the front face's z-indexed text show through the back even
-   with backface-visibility: hidden, so swap visibility at the 90° point. */
-.flash-face { transition: visibility 0s linear .3s; }
+   with backface-visibility: hidden, so swap visibility at the 90° point.
+   With cubic-bezier(.2, .8, .2, 1) over .6s the card is edge-on at 78ms,
+   not at the halfway mark; a later swap leaves both faces hidden. */
+.flash-face { transition: visibility 0s linear 78ms; }
 .flash-back { visibility: hidden; }
 .flashcard.is-flipped .flash-front { visibility: hidden; }
 .flashcard.is-flipped .flash-back { visibility: visible; }
