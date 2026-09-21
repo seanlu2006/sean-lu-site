@@ -244,15 +244,6 @@ html[lang="en"] dd.en { display: block; }
   box-shadow: 0 0 0 5px var(--surface);
 }
 
-.hero-place {
-  display: flex;
-  margin: 0;
-  align-items: center;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: .72rem;
-}
-
 .hero-copy {
   max-width: 30rem;
   margin: 0;
@@ -750,17 +741,9 @@ html[lang="en"] dd.en { display: block; }
   font-size: .9rem;
 }
 
-.bio > p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
-}
-
-.bio > p a,
 .now-list a { text-decoration-color: var(--accent-ink); }
 
-.bio h3 { margin: 3rem 0 .75rem; font-size: 1rem; }
+.bio h3 { margin: 0 0 .75rem; font-size: 1rem; }
 
 .skill-list { margin: 0; padding: 0; list-style: none; }
 
@@ -798,7 +781,6 @@ html[lang="en"] dd.en { display: block; }
 }
 
 .now-list strong { color: var(--ink); }
-.plain-goal { max-width: 56ch; color: var(--muted); }
 
 .month-note {
   padding: clamp(1.5rem, 4vw, 2.5rem);
