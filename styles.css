@@ -985,7 +985,7 @@ html[lang="en"] dd.en { display: block; }
   font-size: clamp(6rem, 22vw, 16rem);
   font-weight: 760;
   line-height: .8;
-  letter-spacing: -.09em;
+  letter-spacing: .04em;
   -webkit-text-stroke: 2px var(--ink);
 }
 
