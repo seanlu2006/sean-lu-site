@@ -745,19 +745,22 @@ html[lang="en"] dd.en { display: block; }
 
 .bio h3 { margin: 0 0 .75rem; font-size: 1rem; }
 
-.skill-list { margin: 0; padding: 0; list-style: none; }
-
-.skill-list li {
-  display: grid;
-  grid-template-columns: 104px 1fr;
-  gap: 1rem;
-  padding: .9rem 0;
-  border-top: 1px solid var(--rule);
-  color: var(--muted);
-  font-size: .84rem;
+.lang-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  gap: .5rem;
+  list-style: none;
 }
 
-.skill-list b { color: var(--ink); font-family: var(--mono); font-size: .7rem; }
+.lang-list li {
+  padding: .4rem .85rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: .78rem;
+}
 
 .now-grid {
   display: grid;
@@ -925,7 +928,6 @@ html[lang="en"] dd.en { display: block; }
   .outside { grid-template-columns: 1fr; gap: 1.4rem; }
   .small-work li { grid-template-columns: 1fr; }
   .principle > p { font-size: clamp(2rem, 9.5vw, 4.1rem); }
-  .skill-list li,
   .now-list li { grid-template-columns: 1fr; gap: .35rem; }
   .contact h2 { font-size: clamp(3.4rem, 16vw, 5.7rem); }
   .site-footer .shell { align-items: flex-start; flex-direction: column; justify-content: center; }
