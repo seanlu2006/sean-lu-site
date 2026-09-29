@@ -95,13 +95,6 @@ img { max-width: 100%; }
   margin-inline: auto;
 }
 
-.en { display: none; }
-
-html[lang="en"] .zh { display: none !important; }
-html[lang="en"] .en { display: inline; }
-html[lang="en"] p.en,
-html[lang="en"] dd.en { display: block; }
-
 .site-header {
   position: relative;
   z-index: 20;
@@ -159,35 +152,6 @@ html[lang="en"] dd.en { display: block; }
 .site-footer a:hover::after {
   scale: 1 1;
   transform-origin: left;
-}
-
-.lang-switch {
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: var(--surface);
-}
-
-.lang-switch button {
-  min-width: 40px;
-  min-height: 44px;
-  padding: 0 .65rem;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-family: var(--mono);
-  font-size: .68rem;
-}
-
-.lang-switch button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--paper);
 }
 
 .hero {
@@ -329,6 +293,7 @@ html[lang="en"] dd.en { display: block; }
   display: block;
   transform-style: preserve-3d;
   transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+  transition: transform 0.7s linear(0, 0.051, 0.1692, 0.3153, 0.4639, 0.6001, 0.7163, 0.8102, 0.8823, 0.935, 0.9717, 0.9955, 1.0098, 1.0171, 1.0198, 1.0195, 1.0175, 1.0147, 1.0117, 1.0089, 1.0064, 1.0044, 1.0028, 1.0016, 1.0008, 1.0002, 0.9999, 0.9997, 0.9996, 0.9996, 0.9996, 0.9997, 0.9997, 0.9998, 0.9999, 0.9999, 1);   /* spring ω=18 ζ=.78, sampled */
 }
 
 .flashcard.is-flipped .flashcard-inner { transform: rotateY(180deg); }
@@ -366,9 +331,13 @@ html[lang="en"] dd.en { display: block; }
 
 /* WebKit lets the front face's z-indexed text show through the back even
    with backface-visibility: hidden, so swap visibility at the 90° point.
+   Spring easing (browsers with linear()): 90° at 83ms. Fallback cubic-bezier: 78ms.
    With cubic-bezier(.2, .8, .2, 1) over .6s the card is edge-on at 78ms,
    not at the halfway mark; a later swap leaves both faces hidden. */
 .flash-face { transition: visibility 0s linear 78ms; }
+@supports (transition-timing-function: linear(0, 1)) {
+  .flash-face { transition-delay: 83ms; }
+}
 .flash-back { visibility: hidden; }
 .flashcard.is-flipped .flash-front { visibility: hidden; }
 .flashcard.is-flipped .flash-back { visibility: visible; }
@@ -713,6 +682,27 @@ html[lang="en"] dd.en { display: block; }
   font-size: .72rem;
 }
 
+.small-work li.motion-item {
+  grid-template-columns: 1fr minmax(200px, .42fr);
+  align-items: start;
+}
+
+.motion-copy strong { display: block; margin-bottom: .4rem; font-size: 1rem; }
+.motion-copy p { max-width: 52ch; margin: 0 0 .8rem; color: var(--muted); line-height: 1.6; }
+.motion-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1.2rem; }
+.motion-meta a { color: var(--ink); font-family: var(--mono); font-size: .72rem; }
+
+.motion-clip {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: #e8e6e1;
+  cursor: pointer;
+}
+
 .about { padding-top: 2rem; }
 
 .about-grid {
@@ -902,7 +892,6 @@ html[lang="en"] dd.en { display: block; }
   .nav { justify-self: center; gap: .9rem; }
   .nav a { font-size: .72rem; }
   .wordmark { font-size: .82rem; }
-  .lang-switch button { min-width: 36px; min-height: 40px; padding-inline: .45rem; }
   .hero { min-height: calc(100dvh - 65px); padding-top: 2rem; }
   .hero-name h1 { display: block; font-size: clamp(4.5rem, 25vw, 6.4rem); line-height: .76; white-space: normal; }
   .hero-name h1 span { display: block; }
@@ -927,6 +916,8 @@ html[lang="en"] dd.en { display: block; }
   .small-work,
   .outside { grid-template-columns: 1fr; gap: 1.4rem; }
   .small-work li { grid-template-columns: 1fr; }
+  .small-work li.motion-item { grid-template-columns: 1fr; }
+  .motion-clip { max-width: 360px; }
   .principle > p { font-size: clamp(2rem, 9.5vw, 4.1rem); }
   .now-list li { grid-template-columns: 1fr; gap: .35rem; }
   .contact h2 { font-size: clamp(3.4rem, 16vw, 5.7rem); }

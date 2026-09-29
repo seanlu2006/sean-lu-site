@@ -2,56 +2,12 @@
   const root = document.documentElement;
   root.classList.add('js');
 
-  const languageButtons = [...document.querySelectorAll('[data-lang]')];
-
-  function refreshLocalizedAccessibility() {
-    const isEnglish = root.lang === 'en';
+  function refreshCardLabel() {
     const currentCard = document.querySelector('.flashcard');
+    if (!currentCard) return;
     const currentWord = document.querySelector('.card-word')?.textContent || '';
-    const flipped = currentCard?.classList.contains('is-flipped');
-
-    if (currentCard) {
-      const action = isEnglish
-        ? (flipped ? 'Show the front of' : 'Show the meaning of')
-        : (flipped ? '翻回單字卡' : '翻開單字卡');
-      currentCard.setAttribute('aria-label', isEnglish ? `${action}: ${currentWord}` : `${action}：${currentWord}`);
-    }
-
-    document.querySelectorAll('[data-alt-zh][data-alt-en]').forEach((image) => {
-      image.alt = isEnglish ? image.dataset.altEn : image.dataset.altZh;
-    });
-  }
-
-  function setLanguage(language) {
-    root.lang = language;
-    languageButtons.forEach((button) => {
-      button.setAttribute('aria-pressed', String(button.dataset.lang === language));
-    });
-
-    try {
-      localStorage.setItem('portfolio-language', language);
-    } catch (_) {
-      // The switch still works when storage is unavailable.
-    }
-
-    refreshLocalizedAccessibility();
-  }
-
-  languageButtons.forEach((button) => {
-    button.addEventListener('click', () => setLanguage(button.dataset.lang));
-  });
-
-  let storedLanguage;
-  try {
-    storedLanguage = localStorage.getItem('portfolio-language');
-  } catch (_) {
-    storedLanguage = null;
-  }
-
-  if (storedLanguage === 'en' || storedLanguage === 'zh-Hant') {
-    setLanguage(storedLanguage);
-  } else if (!/^zh/i.test(navigator.language || '')) {
-    setLanguage('en');
+    const action = currentCard.classList.contains('is-flipped') ? 'Show the front of' : 'Show the meaning of';
+    currentCard.setAttribute('aria-label', `${action}: ${currentWord}`);
   }
 
   const samples = [
@@ -95,7 +51,7 @@
     meaning.textContent = sample.meaning;
     example.textContent = sample.example;
     count.textContent = `${String(sampleIndex + 1).padStart(2, '0')} / ${String(samples.length).padStart(2, '0')}`;
-    refreshLocalizedAccessibility();
+    refreshCardLabel();
   }
 
   card?.addEventListener('click', () => {
@@ -103,7 +59,7 @@
     card.setAttribute('aria-pressed', String(flipped));
     card.querySelector('.flash-front').setAttribute('aria-hidden', String(flipped));
     card.querySelector('.flash-back').setAttribute('aria-hidden', String(!flipped));
-    refreshLocalizedAccessibility();
+    refreshCardLabel();
   });
 
   nextButton?.addEventListener('click', () => {
@@ -128,5 +84,25 @@
     });
   } else {
     revealItems.forEach((item) => item.classList.add('is-visible'));
+  }
+
+  // Motion clip: loads and plays only while on screen; never autoplays for
+  // reduced-motion visitors (they get the poster and can click to play).
+  const clip = document.querySelector('.motion-clip');
+  if (clip) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let userPaused = false;
+    clip.addEventListener('click', () => {
+      if (clip.paused) { userPaused = false; clip.play().catch(() => {}); }
+      else { userPaused = true; clip.pause(); }
+    });
+    if (!reduce && 'IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !userPaused) clip.play().catch(() => {});
+          else if (!entry.isIntersecting) clip.pause();
+        });
+      }, { threshold: 0.4 }).observe(clip);
+    }
   }
 })();
