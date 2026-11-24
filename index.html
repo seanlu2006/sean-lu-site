@@ -13,6 +13,17 @@
   <meta property="og:url" content="https://sean-lu.pages.dev/">
   <meta property="og:type" content="profile">
   <link rel="icon" href="assets/sean-lu.png" type="image/png">
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      try {
+        if (!location.hash && 'animate' in d && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+          d.classList.add('intro-pending');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
@@ -33,23 +44,23 @@
   <main id="main">
     <section class="hero shell" id="top" aria-labelledby="hero-title">
       <div class="hero-name hero-in">
-        <h1 id="hero-title" aria-label="Sean Lu"><span>SEAN</span><span class="name-indent">LU</span></h1>
+        <h1 id="hero-title" aria-label="Sean Lu"><span class="intro-target" data-intro="sean">SEAN</span><span class="name-indent intro-target" data-intro="lu">LU</span></h1>
       </div>
 
       <div class="hero-lower">
         <div class="hero-intro hero-in d1">
           <div class="portrait-row">
-            <img class="portrait" src="assets/sean-lu.png" width="400" height="400" alt="Sean Lu" fetchpriority="high">
+            <img class="portrait intro-target" data-intro="portrait" src="assets/sean-lu.png" width="400" height="400" alt="Sean Lu" fetchpriority="high">
           </div>
           
-          <p class="hero-copy">Information Management sophomore. I build tools and automation I actually use.</p>
-          <div class="hero-actions">
+          <p class="hero-copy intro-target" data-intro="copy">Information Management sophomore. I build tools and automation I actually use.</p>
+          <div class="hero-actions intro-target" data-intro="actions">
             <a class="button button-solid" href="#projects">See work</a>
             <a class="button button-line" href="#contact">Contact</a>
           </div>
         </div>
 
-        <aside class="desk-demo hero-in d2" aria-labelledby="demo-title">
+        <aside class="desk-demo hero-in d2 intro-target" data-intro="desk" aria-labelledby="demo-title">
           <div class="demo-heading">
             <div>
               <p class="micro-label">Interactive demo</p>
@@ -172,6 +183,30 @@
             <figcaption>Dashboard generated with the project's built-in demo data</figcaption>
           </figure>
         </article>
+
+        <article class="project-row project-wide reveal">
+          <div class="project-index" aria-hidden="true">GAME</div>
+          <div class="project-main">
+            <div class="wide-head">
+              <p class="project-kicker">Claude Code · Python · A/B testing</p>
+              <h3>Pokémon TCG agent</h3>
+              <p class="project-lede">Played 1,031 ranked matches in the dev.fun Arena and never cracked the top 10. The useful part was learning which results to ignore.</p>
+            </div>
+            <ul class="stat-strip" aria-label="Season numbers">
+              <li class="stat-dark"><strong>1,031</strong><span>ranked matches</span></li>
+              <li><strong>481</strong><span>wins</span></li>
+              <li><strong>62nd</strong><span>best rank, of about 123 agents</span></li>
+              <li><strong>56,743</strong><span>replayed decisions in the test suite</span></li>
+            </ul>
+            <dl class="compact-notes">
+              <div><dt>Problem</dt><dd>The engine is closed, hands are hidden, and the deck locks for the whole season. Every experiment costs ranked games.</dd></div>
+              <div><dt>Found</dt><dd>Batch win rates were noise. Two versions making the same moves still finished 11 points apart over 155 games.</dd></div>
+              <div><dt>Trade-off</dt><dd>The turn planner only overrides the old rules when a line takes more prizes this turn or avoids losing next turn. Given every decision, it agreed with strong players less often.</dd></div>
+              <div><dt>Role</dt><dd>I made the calls: the deck, the switch to A/B tests, the planner, when to stop. Claude Code wrote the code.</dd></div>
+            </dl>
+            <a class="text-link" href="https://github.com/seanlu2006/devfun-tcg-agent">GitHub <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
       </div>
 
       <div class="small-work reveal">
@@ -185,6 +220,7 @@
             </div>
             <video class="motion-clip" muted loop playsinline preload="none" width="720" height="720" poster="assets/morph-motion-poster.jpg" aria-label="Morph Motion: one black UI object changing from a button into a loader, music player, toggle, tabs, chart, command palette and toast"><source src="assets/morph-motion-720.mp4" type="video/mp4"></video>
           </li>
+          <li><span>Fill Light turns a Mac, iPhone or iPad screen into a fill light for dark rooms. macOS Edge Light only shows up during calls; this works any time. <a href="https://github.com/seanlu2006/fill-light">GitHub <span aria-hidden="true">↗</span></a></span><small>Swift · AppKit · SwiftUI</small></li>
           <li>Telegram → Groq → Obsidian capture pipeline. Jot a line on the phone; it gets tidied up and synced into Obsidian, and I decide what stays.<small>Python · GitHub Actions · iOS Shortcuts</small></li>
           <li>Threads video downloader, a small Python tool.<small>Python</small></li>
           <li>More work lives on GitHub.<a href="https://github.com/seanlu2006">github.com/seanlu2006 <span aria-hidden="true">↗</span></a></li>
@@ -230,11 +266,10 @@
           </ul>
         </div>
         <aside class="month-note">
-          <p class="month-date">October 2026</p>
+          <p class="month-date">November 2026</p>
           <h3>This month</h3>
           <ul>
-            <li>Waiting to hear back on my Claude Campus Ambassador application (Builder Club track)</li>
-            <li>Trading the LucidFlex 25K funded account</li>
+            <li>Took a payout from the LucidFlex 25K funded account</li>
             <li>Trade journaling with MAE/MFE logging</li>
           </ul>
         </aside>
