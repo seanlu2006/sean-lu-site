@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CountAgent</title>
+<style>
+  :root{
+    --bg:#e8e6e1; --panel:#f3f1ec; --ink:#111110; --mut:rgba(17,17,16,.52); --line:rgba(17,17,16,.09);
+    --obj:#111110; --on:#fff; --on-mut:rgba(255,255,255,.55); --bar:#474745; --lime:#a8f07a; --over:#e5533d;
+    --tabbg:#dcd9d2; --shadow:0 22px 54px rgba(35,30,22,.16),0 2px 6px rgba(35,30,22,.10);
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#0f0f0e; --panel:#1a1a18; --ink:#f2f0eb; --mut:rgba(242,240,235,.5); --line:rgba(242,240,235,.08);
+    --obj:#1f1f1d; --bar:#5d5d59; --tabbg:#232321; --shadow:0 18px 44px rgba(0,0,0,.45);
+  }}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink)}
+  body{font-family:-apple-system,"SF Pro Text","PingFang TC","Noto Sans TC",sans-serif;
+       -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 22px 90px}
+
+  header{display:flex;align-items:center;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+  .brand{font-weight:700;font-size:19px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(168,240,122,.25)}
+  .tabs{position:relative;display:flex;background:var(--tabbg);border-radius:999px;padding:4px;margin-left:auto}
+  .tab{position:relative;z-index:1;padding:9px 16px;border-radius:999px;font-weight:600;font-size:14px;white-space:nowrap}
+  .tab:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+  .ind{position:absolute;top:4px;bottom:4px;border-radius:999px;background:var(--obj);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+  .kbtn{padding:8px 12px;border-radius:12px;background:var(--panel);font-weight:600;font-size:13px;color:var(--mut)}
+  .kbtn kbd{font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  .obj{background:var(--obj);color:var(--on);border-radius:36px;padding:28px 30px 22px;box-shadow:var(--shadow)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .kpi .lbl{color:var(--on-mut);font-size:13px;font-weight:600}
+  .kpi{min-width:0} .kpi .val{font-size:clamp(22px,3.4vw,34px);font-weight:700;letter-spacing:-.02em;margin-top:6px;line-height:1.05;white-space:nowrap}
+  .kpi .sub{color:var(--on-mut);font-size:12px;margin-top:6px;min-height:15px}
+  .kpi.neg .val{color:#ff8a73} .kpi.pos .val{color:var(--lime)}
+
+  .chead{display:flex;align-items:center;gap:14px;margin:26px 0 10px}
+  .chead h2{margin:0;font-size:14px;color:var(--on-mut);font-weight:600}
+  .legend{font-size:12px;color:var(--on-mut);display:flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:16px;border-top:2px dashed var(--lime)}
+  .toggle{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--on-mut)}
+  .sw{position:relative;width:52px;height:30px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden}
+  .sw .fill{position:absolute;inset:0;background:var(--lime)}
+  .sw .knob{position:absolute;top:3px;height:24px;border-radius:999px;background:#fff}
+  .chart{position:relative;height:250px;margin-top:6px;touch-action:none}
+  .bars{position:absolute;left:0;right:0;top:0;height:220px}
+  .bar{position:absolute;bottom:0;border-radius:6px 6px 3px 3px;background:var(--bar)}
+  .bline{position:absolute;left:0;right:0;border-top:2px dashed var(--lime);opacity:.85}
+  .xl{position:absolute;top:228px;font-size:11px;color:var(--on-mut);transform:translateX(-50%);white-space:nowrap}
+  .tip{position:absolute;top:6px;pointer-events:none;background:#fff;color:#111110;border-radius:14px;padding:10px 12px;
+       font-size:12px;min-width:150px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+  .tip b{font-size:15px} .tip .r{display:flex;justify-content:space-between;gap:12px;color:#555;margin-top:3px}
+  .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--on-mut);font-size:14px}
+
+  .grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin-top:18px}
+  .panel{background:var(--panel);border-radius:28px;padding:22px 24px}
+  .panel h3{margin:0 0 16px;font-size:14px;color:var(--mut);font-weight:600;display:flex;justify-content:space-between}
+  .cats{position:relative}
+  .crow{position:absolute;left:0;right:0;height:46px}
+  .crow .top{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+  .crow .top span:last-child{color:var(--mut);font-weight:500}
+  .track{position:relative;height:8px;border-radius:99px;background:var(--line);margin-top:7px;overflow:visible}
+  .track .f{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--ink)}
+  .track .o{position:absolute;top:0;bottom:0;border-radius:0 99px 99px 0;background:var(--over)}
+  .track .m{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--lime);
+            box-shadow:0 0 0 2px var(--panel)}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .stat{background:var(--bg);border-radius:20px;padding:14px 16px}
+  .stat .l{font-size:12px;color:var(--mut);font-weight:600}
+  .stat .v{font-size:22px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
+  .stat .s{font-size:12px;color:var(--mut);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .split{height:10px;border-radius:99px;overflow:hidden;display:flex;margin-top:10px;background:var(--line)}
+  .split i{display:block;height:100%}
+
+  .list{margin-top:18px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;font-size:12px;color:var(--mut);font-weight:600;padding:0 8px 10px}
+  td{padding:10px 8px;border-top:1px solid var(--line)}
+  td.a{text-align:right;font-weight:600} th.a{text-align:right}
+  td .c{font-size:12px;color:var(--mut)}
+  tr.in td.a{color:#3e9a2a} tr.iv td.a{color:#6a5acd}
+  @media (prefers-color-scheme:dark){tr.in td.a{color:var(--lime)} tr.iv td.a{color:#a99cff}}
+  tbody tr{animation:rise .42s cubic-bezier(.2,.9,.25,1.15) both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px);filter:blur(4px)}}
+
+  .toast{position:fixed;left:50%;bottom:26px;display:flex;align-items:center;gap:12px;background:var(--obj);color:#fff;
+         padding:14px 20px 16px;border-radius:24px;box-shadow:var(--shadow);font-size:14px;font-weight:600;max-width:calc(100vw - 32px)}
+  .toast .td{width:10px;height:10px;border-radius:50%;background:var(--lime);flex:none}
+  .toast .tl{position:absolute;left:20px;right:20px;bottom:7px;height:3px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+  .toast .tl i{display:block;height:100%;background:var(--lime)}
+
+  .pal-bg{position:fixed;inset:0;background:rgba(17,17,16,.32);display:flex;align-items:flex-start;justify-content:center;padding-top:14vh}
+  .pal{width:min(560px,calc(100vw - 32px));background:var(--obj);color:#fff;border-radius:28px;padding:10px;box-shadow:var(--shadow)}
+  .pal input{width:100%;background:none;border:0;outline:0;color:#fff;font:600 18px -apple-system,"PingFang TC",sans-serif;padding:14px 14px 12px}
+  .pal .it{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;font-size:15px;font-weight:600}
+  .pal .it .k{margin-left:auto;font-size:12px;color:var(--on-mut);font-weight:500}
+  .pal .it.sel{background:rgba(255,255,255,.1)} .pal .it.sel .b{background:var(--lime)}
+  .pal .b{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3)}
+  .foot{margin-top:26px;font-size:12px;color:var(--mut);text-align:center}
+  [hidden]{display:none!important}
+
+  @media (max-width:820px){
+    .kpis{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}
+    .tabs{margin-left:0;width:100%;overflow-x:auto} .kbtn{display:none}
+    .obj{border-radius:28px;padding:22px 18px}
+  }
+  @media (prefers-reduced-motion:reduce){tbody tr{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><span class="dot"></span>CountAgent</div>
+    <nav class="tabs" id="tabs" role="tablist"><div class="ind" id="ind"></div></nav>
+    <button class="kbtn" id="kbtn" title="指令面板"><kbd>⌘K</kbd></button>
+  </header>
+
+  <section class="obj">
+    <div class="kpis">
+      <div class="kpi" id="k-exp"><div class="lbl">支出</div><div class="val">0</div><div class="sub"></div></div>
+      <div class="kpi" id="k-inc"><div class="lbl">收入</div><div class="val">0</div><div class="sub"></div></div>
+      <div class="kpi" id="k-net"><div class="lbl">結餘</div><div class="val">0</div><div class="sub"></div></div>
+      <div class="kpi" id="k-inv"><div class="lbl">定期投資</div><div class="val">0</div><div class="sub"></div></div>
+    </div>
+    <div class="chead">
+      <h2 id="ctitle"></h2>
+      <span class="legend"><i></i><span id="ltext"></span></span>
+      <button class="toggle" id="toggle" role="switch" aria-checked="false">只看外食
+        <span class="sw"><span class="fill" id="swfill"></span><span class="knob" id="knob"></span></span></button>
+    </div>
+    <div class="chart" id="chart">
+      <div class="bars" id="bars"><div class="bline" id="bline"></div></div>
+      <div id="xls"></div>
+      <div class="tip" id="tip"></div>
+      <div class="empty" id="cempty" hidden>這段期間還沒有支出</div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel"><h3><span>分類 vs 預算</span><span id="cbud"></span></h3><div class="cats" id="cats"></div></section>
+    <section class="panel"><h3><span>重點</span></h3><div class="stats" id="stats"></div></section>
+  </div>
+
+  <section class="panel list">
+    <h3><span id="ltitle"></span><span id="lcount"></span></h3>
+    <table><thead><tr><th>日期</th><th>分類</th><th>品項</th><th>付款</th><th class="a">金額</th></tr></thead>
+    <tbody id="rows"></tbody></table>
+  </section>
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="toast" id="toast"><span class="td"></span><span id="ttext"></span><span class="tl"><i id="tbar"></i></span></div>
+<div class="pal-bg" id="palbg" hidden><div class="pal" id="pal"><input id="pin" placeholder="切換月份、季、外食模式…" autocomplete="off"><div id="plist"></div></div></div>
+
+<script>
+const D = {"views": [{"key": "2026-09", "label": "9月", "kind": "month", "range": "8/24–9/23", "nDays": 31, "nMonths": 1, "income": 52000.0, "floorUsed": false, "floor": 30000.0, "expense": 9700.0, "invest": 0, "fixed": 6500.0, "cats": {"居住": 6500.0, "飲食": 3200.0}, "budget": {"居住": 8000.0, "食材": 4000.0, "飲食": 4000.0, "交通": 2000.0, "娛樂": 2000.0, "日用": 1000.0, "購物": 1000.0, "醫療": 1000.0, "其他": 1000.0, "教育": 0.0}, "save": 6000.0, "points": [{"label": "8/24", "total": 0, "food": 0, "items": []}, {"label": "8/25", "total": 0, "food": 0, "items": []}, {"label": "8/26", "total": 0, "food": 0, "items": []}, {"label": "8/27", "total": 0, "food": 0, "items": []}, {"label": "8/28", "total": 0, "food": 0, "items": []}, {"label": "8/29", "total": 0, "food": 0, "items": []}, {"label": "8/30", "total": 0, "food": 0, "items": []}, {"label": "8/31", "total": 0, "food": 0, "items": []}, {"label": "9/1", "total": 0, "food": 0, "items": []}, {"label": "9/2", "total": 0, "food": 0, "items": []}, {"label": "9/3", "total": 0, "food": 0, "items": []}, {"label": "9/4", "total": 6500.0, "food": 0, "items": [["房租", 6500.0, "居住"]]}, {"label": "9/5", "total": 0, "food": 0, "items": []}, {"label": "9/6", "total": 0, "food": 0, "items": []}, {"label": "9/7", "total": 0, "food": 0, "items": []}, {"label": "9/8", "total": 0, "food": 0, "items": []}, {"label": "9/9", "total": 0, "food": 0, "items": []}, {"label": "9/10", "total": 0, "food": 0, "items": []}, {"label": "9/11", "total": 0, "food": 0, "items": []}, {"label": "9/12", "total": 3200.0, "food": 3200.0, "items": [["外食合計", 3200.0, "飲食"]]}, {"label": "9/13", "total": 0, "food": 0, "items": []}, {"label": "9/14", "total": 0, "food": 0, "items": []}, {"label": "9/15", "total": 0, "food": 0, "items": []}, {"label": "9/16", "total": 0, "food": 0, "items": []}, {"label": "9/17", "total": 0, "food": 0, "items": []}, {"label": "9/18", "total": 0, "food": 0, "items": []}, {"label": "9/19", "total": 0, "food": 0, "items": []}, {"label": "9/20", "total": 0, "food": 0, "items": []}, {"label": "9/21", "total": 0, "food": 0, "items": []}, {"label": "9/22", "total": 0, "food": 0, "items": []}, {"label": "9/23", "total": 0, "food": 0, "items": []}], "biggest": ["房租", 6500.0, "2026-09-04"], "rows": [{"date": "2026-09-12", "type": "expense", "amount": 3200.0, "category": "飲食", "item": "外食合計", "payment": "", "fixed": false, "extra": false}, {"date": "2026-09-04", "type": "expense", "amount": 6500.0, "category": "居住", "item": "房租", "payment": "", "fixed": true, "extra": false}, {"date": "2026-08-28", "type": "income", "amount": 52000.0, "category": "薪資", "item": "月薪", "payment": "", "fixed": false, "extra": false}]}, {"key": "2026-10", "label": "10月", "kind": "month", "range": "9/24–10/23", "nDays": 30, "nMonths": 1, "income": 60000.0, "floorUsed": false, "floor": 30000.0, "expense": 12550.0, "invest": 5000.0, "fixed": 6500.0, "cats": {"居住": 6500.0, "飲食": 4800.0, "交通": 1250.0}, "budget": {"居住": 8000.0, "食材": 4000.0, "飲食": 4000.0, "交通": 2000.0, "娛樂": 2000.0, "日用": 1000.0, "購物": 1000.0, "醫療": 1000.0, "其他": 1000.0, "教育": 0.0}, "save": 6000.0, "points": [{"label": "9/24", "total": 0, "food": 0, "items": []}, {"label": "9/25", "total": 0, "food": 0, "items": []}, {"label": "9/26", "total": 0, "food": 0, "items": []}, {"label": "9/27", "total": 0, "food": 0, "items": []}, {"label": "9/28", "total": 0, "food": 0, "items": []}, {"label": "9/29", "total": 0, "food": 0, "items": []}, {"label": "9/30", "total": 0, "food": 0, "items": []}, {"label": "10/1", "total": 0, "food": 0, "items": []}, {"label": "10/2", "total": 0, "food": 0, "items": []}, {"label": "10/3", "total": 0, "food": 0, "items": []}, {"label": "10/4", "total": 0, "food": 0, "items": []}, {"label": "10/5", "total": 6500.0, "food": 0, "items": [["房租", 6500.0, "居住"]]}, {"label": "10/6", "total": 0, "food": 0, "items": []}, {"label": "10/7", "total": 0, "food": 0, "items": []}, {"label": "10/8", "total": 4800.0, "food": 4800.0, "items": [["餐飲合計", 4800.0, "飲食"]]}, {"label": "10/9", "total": 0, "food": 0, "items": []}, {"label": "10/10", "total": 0, "food": 0, "items": []}, {"label": "10/11", "total": 1250.0, "food": 0, "items": [["捷運+加油", 1250.0, "交通"]]}, {"label": "10/12", "total": 0, "food": 0, "items": []}, {"label": "10/13", "total": 0, "food": 0, "items": []}, {"label": "10/14", "total": 0, "food": 0, "items": []}, {"label": "10/15", "total": 0, "food": 0, "items": []}, {"label": "10/16", "total": 0, "food": 0, "items": []}, {"label": "10/17", "total": 0, "food": 0, "items": []}, {"label": "10/18", "total": 0, "food": 0, "items": []}, {"label": "10/19", "total": 0, "food": 0, "items": []}, {"label": "10/20", "total": 0, "food": 0, "items": []}, {"label": "10/21", "total": 0, "food": 0, "items": []}, {"label": "10/22", "total": 0, "food": 0, "items": []}, {"label": "10/23", "total": 0, "food": 0, "items": []}], "biggest": ["房租", 6500.0, "2026-10-05"], "rows": [{"date": "2026-10-13", "type": "investment", "amount": 5000.0, "category": "投資", "item": "ETF 定期定額", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-11", "type": "expense", "amount": 1250.0, "category": "交通", "item": "捷運+加油", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-08", "type": "expense", "amount": 4800.0, "category": "飲食", "item": "餐飲合計", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-05", "type": "expense", "amount": 6500.0, "category": "居住", "item": "房租", "payment": "", "fixed": true, "extra": false}, {"date": "2026-10-01", "type": "income", "amount": 8000.0, "category": "副業", "item": "接案", "payment": "", "fixed": false, "extra": false}, {"date": "2026-09-28", "type": "income", "amount": 52000.0, "category": "薪資", "item": "月薪", "payment": "", "fixed": false, "extra": false}]}, {"key": "2026-11", "label": "11月", "kind": "month", "range": "10/24–11/18", "nDays": 26, "nMonths": 1, "income": 52000.0, "floorUsed": false, "floor": 30000.0, "expense": 17425.0, "invest": 5000.0, "fixed": 6500.0, "cats": {"居住": 6500.0, "飲食": 1505.0, "食材": 1400.0, "購物": 3600.0, "醫療": 1500.0, "交通": 1250.0, "娛樂": 990.0, "日用": 680.0}, "budget": {"居住": 8000.0, "食材": 4000.0, "飲食": 4000.0, "交通": 2000.0, "娛樂": 2000.0, "日用": 1000.0, "購物": 1000.0, "醫療": 1000.0, "其他": 1000.0, "教育": 0.0}, "save": 6000.0, "points": [{"label": "10/24", "total": 0, "food": 0, "items": []}, {"label": "10/25", "total": 0, "food": 0, "items": []}, {"label": "10/26", "total": 0, "food": 0, "items": []}, {"label": "10/27", "total": 0, "food": 0, "items": []}, {"label": "10/28", "total": 6500.0, "food": 0, "items": [["房租", 6500.0, "居住"]]}, {"label": "10/29", "total": 185.0, "food": 185.0, "items": [["午餐", 185.0, "飲食"]]}, {"label": "10/30", "total": 320.0, "food": 320.0, "items": [["晚餐", 320.0, "飲食"]]}, {"label": "10/31", "total": 860.0, "food": 0, "items": [["超市採買", 860.0, "食材"]]}, {"label": "11/1", "total": 0, "food": 0, "items": []}, {"label": "11/2", "total": 3600.0, "food": 0, "items": [["衣服", 3600.0, "購物"]]}, {"label": "11/3", "total": 140.0, "food": 140.0, "items": [["午餐", 140.0, "飲食"]]}, {"label": "11/4", "total": 0, "food": 0, "items": []}, {"label": "11/5", "total": 1500.0, "food": 0, "items": [["看診拿藥", 1500.0, "醫療"]]}, {"label": "11/6", "total": 260.0, "food": 260.0, "items": [["晚餐", 260.0, "飲食"]]}, {"label": "11/7", "total": 0, "food": 0, "items": []}, {"label": "11/8", "total": 1250.0, "food": 0, "items": [["捷運+加油", 1250.0, "交通"]]}, {"label": "11/9", "total": 0, "food": 0, "items": []}, {"label": "11/10", "total": 480.0, "food": 480.0, "items": [["聚餐", 480.0, "飲食"]]}, {"label": "11/11", "total": 990.0, "food": 0, "items": [["電影+串流", 990.0, "娛樂"]]}, {"label": "11/12", "total": 680.0, "food": 0, "items": [["生活用品", 680.0, "日用"]]}, {"label": "11/13", "total": 0, "food": 0, "items": []}, {"label": "11/14", "total": 120.0, "food": 120.0, "items": [["午餐 便當", 120.0, "飲食"]]}, {"label": "11/15", "total": 540.0, "food": 0, "items": [["市場買菜", 540.0, "食材"]]}, {"label": "11/16", "total": 0, "food": 0, "items": []}, {"label": "11/17", "total": 0, "food": 0, "items": []}, {"label": "11/18", "total": 0, "food": 0, "items": []}], "biggest": ["房租", 6500.0, "2026-10-28"], "rows": [{"date": "2026-11-15", "type": "expense", "amount": 540.0, "category": "食材", "item": "市場買菜", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-14", "type": "expense", "amount": 120.0, "category": "飲食", "item": "午餐 便當", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-12", "type": "investment", "amount": 5000.0, "category": "投資", "item": "ETF 定期定額", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-12", "type": "expense", "amount": 680.0, "category": "日用", "item": "生活用品", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-11", "type": "expense", "amount": 990.0, "category": "娛樂", "item": "電影+串流", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-10", "type": "expense", "amount": 480.0, "category": "飲食", "item": "聚餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-08", "type": "expense", "amount": 1250.0, "category": "交通", "item": "捷運+加油", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-06", "type": "expense", "amount": 260.0, "category": "飲食", "item": "晚餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-05", "type": "expense", "amount": 1500.0, "category": "醫療", "item": "看診拿藥", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-03", "type": "expense", "amount": 140.0, "category": "飲食", "item": "午餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-02", "type": "expense", "amount": 3600.0, "category": "購物", "item": "衣服", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-31", "type": "expense", "amount": 860.0, "category": "食材", "item": "超市採買", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-30", "type": "expense", "amount": 320.0, "category": "飲食", "item": "晚餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-29", "type": "expense", "amount": 185.0, "category": "飲食", "item": "午餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-28", "type": "expense", "amount": 6500.0, "category": "居住", "item": "房租", "payment": "", "fixed": true, "extra": false}, {"date": "2026-10-26", "type": "income", "amount": 52000.0, "category": "薪資", "item": "月薪", "payment": "", "fixed": false, "extra": false}]}, {"key": "2026Q4", "label": "Q4", "kind": "quarter", "range": "9/24–11/18", "nDays": 56, "nMonths": 2, "income": 112000.0, "floorUsed": false, "floor": 30000.0, "expense": 29975.0, "invest": 10000.0, "fixed": 13000.0, "cats": {"居住": 13000.0, "飲食": 6305.0, "交通": 2500.0, "食材": 1400.0, "購物": 3600.0, "醫療": 1500.0, "娛樂": 990.0, "日用": 680.0}, "budget": {"居住": 16000.0, "食材": 8000.0, "飲食": 8000.0, "交通": 4000.0, "娛樂": 4000.0, "日用": 2000.0, "購物": 2000.0, "醫療": 2000.0, "其他": 2000.0, "教育": 0.0}, "save": 12000.0, "points": [{"label": "9/21", "total": 0, "food": 0, "items": []}, {"label": "9/28", "total": 0, "food": 0, "items": []}, {"label": "10/5", "total": 12550.0, "food": 4800.0, "items": [["房租", 6500.0, "居住"], ["餐飲合計", 4800.0, "飲食"], ["捷運+加油", 1250.0, "交通"]]}, {"label": "10/12", "total": 0, "food": 0, "items": []}, {"label": "10/19", "total": 0, "food": 0, "items": []}, {"label": "10/26", "total": 7865.0, "food": 505.0, "items": [["房租", 6500.0, "居住"], ["超市採買", 860.0, "食材"], ["晚餐", 320.0, "飲食"], ["午餐", 185.0, "飲食"]]}, {"label": "11/2", "total": 6750.0, "food": 400.0, "items": [["衣服", 3600.0, "購物"], ["看診拿藥", 1500.0, "醫療"], ["捷運+加油", 1250.0, "交通"], ["晚餐", 260.0, "飲食"], ["午餐", 140.0, "飲食"]]}, {"label": "11/9", "total": 2810.0, "food": 600.0, "items": [["電影+串流", 990.0, "娛樂"], ["生活用品", 680.0, "日用"], ["市場買菜", 540.0, "食材"], ["聚餐", 480.0, "飲食"], ["午餐 便當", 120.0, "飲食"]]}, {"label": "11/16", "total": 0, "food": 0, "items": []}], "biggest": ["房租", 6500.0, "2026-10-05"], "rows": [{"date": "2026-11-15", "type": "expense", "amount": 540.0, "category": "食材", "item": "市場買菜", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-14", "type": "expense", "amount": 120.0, "category": "飲食", "item": "午餐 便當", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-12", "type": "investment", "amount": 5000.0, "category": "投資", "item": "ETF 定期定額", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-12", "type": "expense", "amount": 680.0, "category": "日用", "item": "生活用品", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-11", "type": "expense", "amount": 990.0, "category": "娛樂", "item": "電影+串流", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-10", "type": "expense", "amount": 480.0, "category": "飲食", "item": "聚餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-08", "type": "expense", "amount": 1250.0, "category": "交通", "item": "捷運+加油", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-06", "type": "expense", "amount": 260.0, "category": "飲食", "item": "晚餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-05", "type": "expense", "amount": 1500.0, "category": "醫療", "item": "看診拿藥", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-03", "type": "expense", "amount": 140.0, "category": "飲食", "item": "午餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-11-02", "type": "expense", "amount": 3600.0, "category": "購物", "item": "衣服", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-31", "type": "expense", "amount": 860.0, "category": "食材", "item": "超市採買", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-30", "type": "expense", "amount": 320.0, "category": "飲食", "item": "晚餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-29", "type": "expense", "amount": 185.0, "category": "飲食", "item": "午餐", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-28", "type": "expense", "amount": 6500.0, "category": "居住", "item": "房租", "payment": "", "fixed": true, "extra": false}, {"date": "2026-10-26", "type": "income", "amount": 52000.0, "category": "薪資", "item": "月薪", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-13", "type": "investment", "amount": 5000.0, "category": "投資", "item": "ETF 定期定額", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-11", "type": "expense", "amount": 1250.0, "category": "交通", "item": "捷運+加油", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-08", "type": "expense", "amount": 4800.0, "category": "飲食", "item": "餐飲合計", "payment": "", "fixed": false, "extra": false}, {"date": "2026-10-05", "type": "expense", "amount": 6500.0, "category": "居住", "item": "房租", "payment": "", "fixed": true, "extra": false}, {"date": "2026-10-01", "type": "income", "amount": 8000.0, "category": "副業", "item": "接案", "payment": "", "fixed": false, "extra": false}, {"date": "2026-09-28", "type": "income", "amount": 52000.0, "category": "薪資", "item": "月薪", "payment": "", "fixed": false, "extra": false}]}], "default": 2, "cats": ["交通", "其他", "娛樂", "居住", "教育", "日用", "購物", "醫療", "食材", "飲食"], "generated": "2026-11-18", "t": {"htmlLang": "zh-Hant", "palette": "指令面板", "exp": "支出", "inc": "收入", "net": "結餘", "inv": "定期投資", "daily": "每日", "weekly": "每週", "spend": "支出", "eatOut": "外食", "budget": "預算 ", "eatBudget": "外食預算 ", "onlyEatOut": "只看外食", "empty": "這段期間還沒有支出", "catVsBud": "分類 vs 預算", "highlights": "重點", "tx": "交易", "eatLog": "外食紀錄", "cols": ["日期", "分類", "品項", "付款", "金額"], "palPh": "切換月份、季、外食模式…", "noRec": "沒有紀錄", "budgetN": "預算 {n}", "avgDay": "日均支出", "days": "{n} 天", "biggest": "最大單筆", "eatUsed": "外食預算用掉", "fixed": "固定支出", "fixedShare": "佔支出 {n}%", "cookVsOut": "自己煮 vs 外食", "grocLine": "{g}（{p}%）· 外食 {f}", "count": "{n} 筆", "fixedTag": "固定", "toastEat": "{l}外食 {f}，是預算的 {p}%", "toastEat0": "{l}外食 {f}", "goTo": "切換到 {l}", "quarter": "季報", "eatOff": "關閉外食模式", "switch": "開關", "budUsed": "預算 {b} · 用掉 {p}%", "floorUsed": "以保底 {f}/月計，季末補實際", "incLater": "收入季末整理", "rate": "儲蓄率 {p}%", "netLater": "收入補齊後才準", "invNot": "不計入支出", "invNone": "這段期間沒有扣款", "over": "{l}有 {n} 類超出預算，最多的是{c}（{p}%）", "noOver": "{l}有預算的分類都沒超支", "foot": "產生於 {d} · 資料來源 ledger.csv · ←/→ 切換,⌘K 指令面板", "hello": "{l}支出 {e}，按 ←／→ 或 ⌘K 切換期間"}, "sym": "NT$", "dec": 0, "eat": "飲食", "groc": "食材"};
+(() => {
+  const T = D.t, CUR = D.sym, EAT = D.eat, GROC = D.groc;
+  const tf = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
+  // ---------------------------------------------------------------- 彈簧(同 morph-motion 的閉式解)
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const mix = (a, b, k) => a + (b - a) * k;
+  function S(tau, w, z) {
+    if (tau <= 0) return 0;
+    if (z >= 1) return 1 - Math.exp(-w * tau) * (1 + w * tau);
+    const wd = w * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w * tau) * (Math.cos(wd * tau) + (z * w / wd) * Math.sin(wd * tau));
+  }
+  const SP = { snap: [24, .86], morph: [15, .82], grow: [12, .84], camera: [9, 1], lead: [22, .85], trail: [13, .85] };
+  const now = () => performance.now() / 1000;
+  const live = new Set(); let raf = 0;
+  /* 目標每改一次就疊一條階躍響應;跑完的響應併回 base,值不跳。 */
+  function spring(v0 = 0) {
+    const s = { base: v0, last: v0, ev: [],
+      set(v, p = 'morph', delay = 0) {
+        if (v === s.last) return;
+        if (RM) { s.jump(v); kick(); return; }
+        s.ev.push({ t: now() + delay, d: v - s.last, p: SP[p] }); s.last = v; live.add(s); kick();
+      },
+      jump(v) { s.base = v; s.last = v; s.ev = []; },
+      get(t = now()) { let f = s.base; for (const e of s.ev) f += e.d * S(t - e.t, e.p[0], e.p[1]); return f; },
+      settle(t) { s.ev = s.ev.filter(e => (t - e.t > 3 ? (s.base += e.d, false) : true)); return !s.ev.length; },
+    };
+    return s;
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+  function frame() {
+    const t = now(); render(t);
+    for (const s of live) if (s.settle(t)) live.delete(s);
+    raf = live.size || toastUntil > t ? requestAnimationFrame(frame) : 0;
+  }
+  // 進退場:淡入 + 模糊 + 微位移(同 morph-motion 的 show())
+  function show(el, v, drift = 6, blur = 6) {
+    v = clamp(v); el.style.opacity = v.toFixed(3);
+    el.style.filter = v < .999 ? `blur(${((1 - v) * blur).toFixed(2)}px)` : 'none';
+    el.style.visibility = v < .002 ? 'hidden' : 'visible';
+    return (1 - v) * drift;
+  }
+
+  // ---------------------------------------------------------------- 工具
+  const $ = s => document.querySelector(s);
+  const fmt = n => Number(n).toLocaleString('en-US', { minimumFractionDigits: D.dec, maximumFractionDigits: D.dec });
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const V = D.views;
+  let cur = D.default, foodMode = false;
+
+  // ---------------------------------------------------------------- 液態分頁
+  const tabsEl = $('#tabs'), ind = $('#ind');
+  const tabEls = V.map((v, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.textContent = v.label; b.setAttribute('role', 'tab');
+    b.onclick = () => select(i); tabsEl.appendChild(b); return b;
+  });
+  const indL = spring(), indR = spring();
+  function tabGeom(i) { const b = tabEls[i]; return [b.offsetLeft, b.offsetLeft + b.offsetWidth]; }
+  function moveInd(i, instant) {
+    const [l, r] = tabGeom(i);
+    if (instant) { indL.jump(l); indR.jump(r); return; }
+    const right = l > indL.last;               // 前緣硬、後緣軟,指示器會被「拉長」再收回
+    indL.set(l, right ? 'trail' : 'lead'); indR.set(r, right ? 'lead' : 'trail');
+  }
+
+  // ---------------------------------------------------------------- KPI
+  const K = {};
+  for (const k of ['exp', 'inc', 'net', 'inv']) K[k] = { el: $('#k-' + k), s: spring() };
+
+  // ---------------------------------------------------------------- 長條圖
+  const barsEl = $('#bars'), chartEl = $('#chart'), tip = $('#tip'), bline = $('#bline');
+  const BH = 220; let bars = [], pts = [], maxV = 1;
+  const colW = spring(10), lineY = spring(BH), tipV = spring(0), tipX = spring(0);
+  let hover = -1, tipSide = false;
+  function ensureBars(n) {
+    while (bars.length < n) {
+      const el = document.createElement('div'); el.className = 'bar'; barsEl.appendChild(el);
+      bars.push({ el, h: spring(0), hi: spring(0) });
+    }
+  }
+  function dayBudget(v) {
+    const b = v.budget, tot = foodMode ? (b[EAT] || 0) : Object.values(b).reduce((a, c) => a + c, 0);
+    return tot / v.nMonths / (v.kind === 'month' ? 30 : 30 / 7) || 0;
+  }
+  function setChart(v, first) {
+    pts = v.points; const n = pts.length; ensureBars(n);
+    const val = p => foodMode ? p.food : p.total;
+    const bud = dayBudget(v);
+    maxV = Math.max(1, bud * 1.15, ...pts.map(val)) * 1.08;
+    const W = chartEl.clientWidth;
+    first ? colW.jump(W / Math.max(n, 1)) : colW.set(W / Math.max(n, 1), 'morph');
+    const stagger = Math.min(.04, .6 / Math.max(n, 1));     // morph-motion 是 40ms 一根
+    bars.forEach((b, k) => b.h.set(k < n ? val(pts[k]) / maxV * BH : 0, 'morph', k * stagger));
+    lineY.set(BH - bud / maxV * BH, 'morph');
+    $('#ltext').textContent = (v.kind === 'month' ? T.daily : T.weekly) + (foodMode ? T.eatBudget : T.budget) + fmt(bud);
+    $('.legend').style.visibility = bud ? '' : 'hidden';
+    $('#ctitle').textContent = (v.kind === 'month' ? T.daily : T.weekly) + (foodMode ? T.eatOut : T.spend);
+    $('#cempty').hidden = pts.some(p => val(p) > 0);
+    // x 軸標籤:最多 8 個
+    const xls = $('#xls'); xls.innerHTML = '';
+    const step = Math.ceil(n / 8);
+    pts.forEach((p, k) => { if (k % step === 0) { const s = document.createElement('div'); s.className = 'xl'; s.textContent = p.label; s.dataset.k = k; xls.appendChild(s); } });
+    setHover(-1);
+  }
+  function setHover(k) {
+    if (k === hover) return;
+    if (hover >= 0 && bars[hover]) bars[hover].hi.set(0, 'snap');
+    hover = k;
+    if (k < 0) { tipV.set(0, 'snap'); return; }
+    bars[k].hi.set(1, 'snap');
+    const p = pts[k], items = p.items.filter(i => !foodMode || i[2] === EAT);
+    tip.innerHTML = `<div>${esc(p.label)}</div><b>${CUR}${fmt(foodMode ? p.food : p.total)}</b>` +
+      (items.length ? items.slice(0, 4).map(i => `<div class="r"><span>${esc(i[0])}</span><span>${fmt(i[1])}</span></div>`).join('') : `<div class="r">${T.noRec}</div>`);
+    tipX.set((k + .5) * colW.last, tipV.get() > .3 ? 'snap' : 'snap');
+    if (tipV.get() < .05) tipX.jump((k + .5) * colW.last);
+    tipV.set(1, 'snap');
+  }
+  chartEl.addEventListener('pointermove', e => {
+    const r = chartEl.getBoundingClientRect(), k = Math.floor((e.clientX - r.left) / colW.last);
+    setHover(k >= 0 && k < pts.length ? k : -1);
+  });
+  chartEl.addEventListener('pointerleave', () => setHover(-1));
+
+  // ---------------------------------------------------------------- 分類 vs 預算(列會依金額重新排序並滑動)
+  const catsEl = $('#cats'), RH = 52;
+  const CR = {};
+  D.cats.forEach(c => {
+    const el = document.createElement('div'); el.className = 'crow';
+    el.innerHTML = `<div class="top"><span>${esc(c)}</span><span></span></div><div class="track"><i class="f"></i><i class="o"></i><i class="m"></i></div>`;
+    catsEl.appendChild(el);
+    CR[c] = { el, amt: el.querySelector('.top span:last-child'), f: el.querySelector('.f'), o: el.querySelector('.o'), m: el.querySelector('.m'),
+      y: spring(0), vis: spring(0), fw: spring(0), ow: spring(0), mx: spring(0), a: spring(0) };
+  });
+  const catsH = spring(0);
+  function setCats(v, first) {
+    const act = c => v.cats[c] || 0, bud = c => v.budget[c] || 0;
+    const shown = D.cats.filter(c => act(c) > 0 || bud(c) > 0).sort((a, b) => act(b) - act(a) || bud(b) - bud(a));
+    const scale = Math.max(1, ...shown.map(c => Math.max(act(c), bud(c))));
+    D.cats.forEach(c => {
+      const R = CR[c], i = shown.indexOf(c), A = act(c), B = bud(c);
+      const go = (s, val, p = 'morph', d = 0) => first ? s.jump(val) : s.set(val, p, d);
+      go(R.y, i < 0 ? shown.length * RH : i * RH);
+      go(R.vis, i < 0 ? 0 : 1, 'snap');
+      go(R.fw, (B ? Math.min(A, B) : A) / scale * 100, 'morph', i * .03);
+      go(R.ow, B && A > B ? (A - B) / scale * 100 : 0, 'morph', i * .03 + .08);
+      go(R.mx, B / scale * 100);
+      go(R.a, A);
+      R.bud = B;
+    });
+    first ? catsH.jump(shown.length * RH) : catsH.set(shown.length * RH);
+    const tb = Object.values(v.budget).reduce((a, c) => a + c, 0);
+    $('#cbud').textContent = tb ? tf(T.budgetN, { n: fmt(tb) }) : '';
+  }
+
+  // ---------------------------------------------------------------- 重點卡
+  const statsEl = $('#stats');
+  function setStats(v) {
+    const days = v.nDays, food = v.cats[EAT] || 0, groc = v.cats[GROC] || 0;
+    const fb = v.budget[EAT] || 0;
+    const big = v.biggest;
+    const cards = [
+      [T.avgDay, `${CUR}${fmt(v.expense / Math.max(days, 1))}`, tf(T.days, { n: days })],
+      [T.biggest, big ? `${CUR}${fmt(big[1])}` : '—', big ? `${big[2].slice(5).replace('-', '/')} ${big[0]}` : ''],
+      [T.eatUsed, fb ? `${Math.round(food / fb * 100)}%` : '—', fb ? `${fmt(food)} / ${fmt(fb)}` : ''],
+      [T.fixed, `${CUR}${fmt(v.fixed)}`, v.expense ? tf(T.fixedShare, { n: Math.round(v.fixed / v.expense * 100) }) : ''],
+    ];
+    const ratio = food + groc ? groc / (food + groc) : 0;
+    statsEl.innerHTML = cards.map(c => `<div class="stat"><div class="l">${c[0]}</div><div class="v">${c[1]}</div><div class="s">${esc(c[2])}</div></div>`).join('') +
+      `<div class="stat" style="grid-column:1/-1"><div class="l">${T.cookVsOut}</div>
+        <div class="split"><i style="width:${(ratio * 100).toFixed(1)}%;background:var(--lime)"></i><i style="flex:1;background:var(--ink);opacity:.85"></i></div>
+        <div class="s">${esc(GROC)} ${tf(T.grocLine, { g: CUR + fmt(groc), p: Math.round(ratio * 100), f: CUR + fmt(food) })}</div></div>`;
+  }
+
+  // ---------------------------------------------------------------- 交易表
+  function setRows(v) {
+    const rows = v.rows.filter(r => !foodMode || r.category === EAT);
+    $('#ltitle').textContent = (foodMode ? T.eatLog : T.tx) + ' · ' + v.range;
+    $('#lcount').textContent = tf(T.count, { n: rows.length });
+    const sign = r => r.type === 'income' ? '+' : r.type === 'expense' ? '−' : '';
+    const cls = r => r.type === 'income' ? 'in' : r.type === 'investment' ? 'iv' : '';
+    $('#rows').innerHTML = rows.map((r, i) => `<tr class="${cls(r)}" style="animation-delay:${Math.min(i, 24) * 18}ms">
+      <td>${r.date.slice(5).replace('-', '/')}</td><td>${esc(r.category)}${r.fixed ? ` <span class="c">${T.fixedTag}</span>` : ''}</td>
+      <td>${esc(r.item)}</td><td class="c">${esc(r.payment)}</td><td class="a">${sign(r)}${fmt(r.amount)}</td></tr>`).join('');
+  }
+
+  // ---------------------------------------------------------------- 外食開關(旋鈕兩邊各一條彈簧,萊姆綠從左側湧入)
+  const tg = $('#toggle'), knob = $('#knob'), swfill = $('#swfill');
+  const kL = spring(3), kR = spring(27), lime = spring(0);
+  function setToggle(on) {
+    foodMode = on; tg.setAttribute('aria-checked', on);
+    kL.set(on ? 25 : 3, on ? 'trail' : 'lead'); kR.set(on ? 49 : 27, on ? 'lead' : 'trail');
+    lime.set(on ? 1 : 0, 'morph');
+    const v = V[cur]; setChart(v); setRows(v);
+    const food = v.cats[EAT] || 0, fb = v.budget[EAT] || 0;
+    if (on) toast(fb ? tf(T.toastEat, { l: v.label, f: CUR + fmt(food), p: Math.round(food / fb * 100) }) : tf(T.toastEat0, { l: v.label, f: CUR + fmt(food) }));
+  }
+  tg.onclick = () => setToggle(!foodMode);
+
+  // ---------------------------------------------------------------- toast(底部計時線走完就收)
+  const toastEl = $('#toast'), tv = spring(0); let toastAt = 0, toastUntil = 0;
+  function toast(msg, dur = 3.2) {
+    $('#ttext').textContent = msg; toastAt = now(); toastUntil = toastAt + dur + .6;
+    tv.set(1, 'snap'); clearTimeout(toast.h); toast.h = setTimeout(() => tv.set(0, 'snap'), dur * 1000); kick();
+  }
+
+  // ---------------------------------------------------------------- ⌘K 指令面板
+  const palbg = $('#palbg'), pin = $('#pin'), plist = $('#plist'), pv = spring(0);
+  let pItems = [], pSel = 0;
+  function cmds() {
+    return [...V.map((v, i) => ({ t: tf(T.goTo, { l: v.label }), k: v.kind === 'month' ? v.key : T.quarter, run: () => select(i) })),
+      { t: foodMode ? T.eatOff : T.onlyEatOut, k: T.switch, run: () => setToggle(!foodMode) }];
+  }
+  function drawPal() {
+    const q = pin.value.trim().toLowerCase();
+    pItems = cmds().filter(c => !q || (c.t + c.k).toLowerCase().includes(q));
+    pSel = Math.min(pSel, Math.max(0, pItems.length - 1));
+    plist.innerHTML = pItems.map((c, i) => `<div class="it${i === pSel ? ' sel' : ''}" data-i="${i}"><span class="b"></span>${esc(c.t)}<span class="k">${esc(c.k)}</span></div>`).join('');
+  }
+  function openPal(o) {
+    if (o) { palbg.hidden = false; pin.value = ''; pSel = 0; drawPal(); pin.focus(); }
+    pv.set(o ? 1 : 0, 'snap');
+    if (!o) setTimeout(() => { if (pv.last === 0) palbg.hidden = true; }, 260);
+  }
+  $('#kbtn').onclick = () => openPal(true);
+  palbg.onclick = e => { if (e.target === palbg) openPal(false); };
+  plist.onclick = e => { const it = e.target.closest('.it'); if (it) { openPal(false); pItems[+it.dataset.i].run(); } };
+  pin.oninput = () => { pSel = 0; drawPal(); };
+  addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPal(palbg.hidden); return; }
+    if (!palbg.hidden) {
+      if (e.key === 'Escape') openPal(false);
+      else if (e.key === 'ArrowDown') { pSel = (pSel + 1) % Math.max(1, pItems.length); drawPal(); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { pSel = (pSel - 1 + pItems.length) % Math.max(1, pItems.length); drawPal(); e.preventDefault(); }
+      else if (e.key === 'Enter' && pItems[pSel]) { openPal(false); pItems[pSel].run(); }
+      return;
+    }
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') select(Math.min(V.length - 1, cur + 1));
+    if (e.key === 'ArrowLeft') select(Math.max(0, cur - 1));
+  });
+
+  // ---------------------------------------------------------------- 切換視圖
+  function select(i, first) {
+    cur = i; const v = V[i];
+    tabEls.forEach((b, k) => b.setAttribute('aria-selected', k === i));
+    moveInd(i, first);
+    const go = (s, val) => first ? s.jump(val) : s.set(val, 'morph');
+    go(K.exp.s, v.expense); go(K.inc.s, v.income); go(K.net.s, v.income - v.expense); go(K.inv.s, v.invest);
+    const fb = v.budget[EAT] || 0, tb = Object.values(v.budget).reduce((a, c) => a + c, 0);
+    K.exp.el.querySelector('.sub').textContent = tb ? tf(T.budUsed, { b: fmt(tb), p: Math.round(v.expense / tb * 100) }) : '';
+    K.inc.el.querySelector('.sub').textContent = v.floorUsed ? tf(T.floorUsed, { f: fmt(v.floor) }) : (v.income ? '' : T.incLater);
+    K.net.el.querySelector('.sub').textContent = v.income ? tf(T.rate, { p: Math.round((v.income - v.expense) / v.income * 100) }) : T.netLater;
+    K.inv.el.querySelector('.sub').textContent = v.invest ? T.invNot : T.invNone;
+    setChart(v, first); setCats(v, first); setStats(v); setRows(v);
+    if (!first) {
+      const over = Object.keys(v.budget).filter(c => v.budget[c] > 0 && (v.cats[c] || 0) > v.budget[c]).sort((a, b) => (v.cats[b] / v.budget[b]) - (v.cats[a] / v.budget[a]));
+      toast(over.length ? tf(T.over, { l: v.label, n: over.length, c: over[0], p: Math.round(v.cats[over[0]] / v.budget[over[0]] * 100) }) : tf(T.noOver, { l: v.label }));
+    }
+    kick();
+  }
+
+  // ---------------------------------------------------------------- render:每一格畫面都只看彈簧當下的值
+  function render(t) {
+    const L = indL.get(t), R = indR.get(t);
+    ind.style.left = Math.min(L, R) + 'px'; ind.style.width = Math.abs(R - L) + 'px';
+    tabEls.forEach(b => {
+      const a = b.offsetLeft, z = a + b.offsetWidth;
+      const cover = clamp((Math.min(z, R) - Math.max(a, L)) / (z - a));
+      b.style.color = cover > .5 ? '#fff' : '';
+      b.style.opacity = mix(.62, 1, cover).toFixed(3);
+    });
+    for (const k in K) K[k].el.querySelector('.val').textContent = (k === 'net' && K[k].s.get(t) < -0.5 ? '−' : '') + CUR + fmt(Math.abs(K[k].s.get(t)));
+    K.net.el.className = 'kpi ' + (K.net.s.last < 0 ? 'neg' : K.net.s.last > 0 ? 'pos' : '');
+
+    const cw = colW.get(t), gap = Math.max(1, Math.min(6, cw * .22));
+    bars.forEach((b, k) => {
+      const h = Math.max(0, b.h.get(t)), hi = clamp(b.hi.get(t)), s = b.el.style;
+      s.left = (k * cw + gap / 2) + 'px'; s.width = Math.max(1, cw - gap) + 'px'; s.height = h + 'px';
+      s.background = hi > .01 ? `rgb(${Math.round(mix(71, 168, hi))},${Math.round(mix(71, 240, hi))},${Math.round(mix(69, 122, hi))})` : '';
+      s.opacity = k < pts.length ? 1 : clamp(h / 20);
+    });
+    bline.style.top = lineY.get(t) + 'px';
+    document.querySelectorAll('.xl').forEach(x => x.style.left = ((+x.dataset.k + .5) * cw) + 'px');
+    const drift = show(tip, tipV.get(t));
+    // 放在長條旁邊,不蓋住自己指的那根:右半邊的長條把卡片放左側
+    const right = hover >= 0 ? hover >= pts.length / 2 : tipSide;
+    if (hover >= 0) tipSide = right;
+    const off = cw / 2 + 10;
+    tip.style.left = tipX.get(t) + 'px';
+    tip.style.transform = `translate(${right ? `calc(-100% - ${off}px)` : off + 'px'}, ${(-drift).toFixed(2)}px)`;
+
+    for (const c in CR) {
+      const R2 = CR[c], vis = clamp(R2.vis.get(t));
+      R2.el.style.transform = `translateY(${R2.y.get(t).toFixed(2)}px)`;
+      R2.el.style.opacity = vis.toFixed(3); R2.el.style.visibility = vis < .01 ? 'hidden' : 'visible';
+      const fw = Math.max(0, R2.fw.get(t)), ow = Math.max(0, R2.ow.get(t));
+      R2.f.style.width = fw + '%'; R2.o.style.left = fw + '%'; R2.o.style.width = ow + '%';
+      R2.f.style.borderRadius = ow > .3 ? '99px 0 0 99px' : '';
+      R2.m.style.left = R2.mx.get(t) + '%'; R2.m.style.display = R2.bud ? '' : 'none';
+      const A = R2.a.get(t);
+      R2.amt.textContent = CUR + fmt(A) + (R2.bud ? ` · ${Math.round(R2.a.last / R2.bud * 100)}%` : '');
+    }
+    catsEl.style.height = catsH.get(t) + 'px';
+
+    knob.style.left = Math.min(kL.get(t), kR.get(t)) + 'px'; knob.style.width = Math.abs(kR.get(t) - kL.get(t)) + 'px';
+    const lr = clamp(lime.get(t), 0, 1.1) * 70;
+    swfill.style.clipPath = swfill.style.webkitClipPath = `circle(${lr.toFixed(1)}px at 0% 50%)`;
+    knob.style.background = lime.get(t) > .5 ? '#111110' : '#fff';
+
+    const d = show(toastEl, tv.get(t), 10, 8);
+    toastEl.style.transform = `translate(-50%, ${d.toFixed(2)}px) scale(${mix(.94, 1, clamp(tv.get(t))).toFixed(4)})`;
+    $('#tbar').style.width = (clamp((t - toastAt) / 3.2) * 100).toFixed(2) + '%';
+
+    if (!palbg.hidden) {
+      const p = clamp(pv.get(t)); palbg.style.opacity = p.toFixed(3);
+      $('#pal').style.transform = `translateY(${((1 - p) * -12).toFixed(2)}px) scale(${mix(.96, 1, p).toFixed(4)})`;
+      $('#pal').style.filter = p < .999 ? `blur(${((1 - p) * 6).toFixed(2)}px)` : 'none';
+    }
+  }
+
+  addEventListener('resize', () => { moveInd(cur, true); colW.jump(chartEl.clientWidth / Math.max(pts.length, 1)); kick(); });
+  $('#foot').textContent = tf(T.foot, { d: D.generated });
+  if (!V.length) { $('#cempty').hidden = false; return; }
+  select(cur, true); render(now());
+  // 開場:長條從 0 錯開升起,分類條長出來
+  requestAnimationFrame(() => {
+    const v = V[cur]; bars.forEach(b => b.h.jump(0)); setChart(v);
+    D.cats.forEach(c => { CR[c].fw.jump(0); CR[c].ow.jump(0); CR[c].a.jump(0); }); setCats(v);
+    K.exp.s.jump(0); K.exp.s.set(v.expense); K.inv.s.jump(0); K.inv.s.set(v.invest);
+    setTimeout(() => toast(tf(T.hello, { l: v.label, e: CUR + fmt(v.expense) })), 500);
+  });
+})();
+</script>
+</body>
+</html>

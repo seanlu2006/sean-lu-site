@@ -1150,3 +1150,5 @@ img { max-width: 100%; }
   .build-layer { --c-claude: var(--accent); --c-codex: #aab4ac; }
   .build-cursor path { stroke: #0b0f0c; }
 }
+
+.preview-ielts img { aspect-ratio: 7 / 5; object-position: top; }
