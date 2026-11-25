@@ -2,43 +2,54 @@
   const root = document.documentElement;
   root.classList.add('js');
 
-  function refreshCardLabel() {
-    const currentCard = document.querySelector('.flashcard');
-    if (!currentCard) return;
-    const currentWord = document.querySelector('.card-word')?.textContent || '';
-    const action = currentCard.classList.contains('is-flipped') ? 'Show the front of' : 'Show the meaning of';
-    currentCard.setAttribute('aria-label', `${action}: ${currentWord}`);
-  }
-
+  // CountAgent demo: the front is the line sent from the phone, the back is the
+  // entry the agent files. Rules come from the CountAgent skill: today unless the
+  // line says otherwise, expense by default, payment falls back to the card, and a
+  // same-day repeat with the same amount and meaning is held for a question.
+  const day = (offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
   const samples = [
     {
-      word: 'mitigate',
-      type: 'verb',
-      meaning: '減輕；緩和',
-      example: 'The policy aims to mitigate the impact of rising housing costs.'
+      line: 'lunch 12',
+      id: 42,
+      entry: { date: day(0), type: 'expense', amount: '12', category: 'Dining', item: 'lunch', payment: 'card' }
     },
     {
-      word: 'ubiquitous',
-      type: 'adjective',
-      meaning: '無所不在的',
-      example: 'Smartphones have become ubiquitous in everyday life.'
+      line: 'uber 18 yesterday',
+      id: 43,
+      entry: { date: day(-1), type: 'expense', amount: '18', category: 'Transport', item: 'uber', payment: 'card' }
     },
     {
-      word: 'scrutinize',
-      type: 'verb',
-      meaning: '仔細檢查',
-      example: 'The committee will scrutinize the evidence before making a decision.'
+      line: '計程車 250 剛剛刷卡',
+      id: 44,
+      entry: { date: day(0), type: '支出', amount: '250', category: '交通', item: '計程車', payment: '信用卡' }
+    },
+    {
+      line: 'lunch 12',
+      sent: 'Sent again, same day',
+      held: 'Same amount and meaning as #42 today. It goes in once, and the agent asks whether there were two lunches.'
     }
   ];
 
   const card = document.querySelector('.flashcard');
   const nextButton = document.querySelector('.next-card');
   const word = document.querySelector('.card-word');
-  const type = document.querySelector('.word-kind');
-  const meaning = document.querySelector('.card-meaning');
-  const example = document.querySelector('.card-example');
+  const sent = document.querySelector('.flash-front .card-hint');
+  const title = document.querySelector('.entry-title');
+  const grid = document.querySelector('.entry-grid');
+  const held = document.querySelector('.entry-held');
   const count = document.querySelector('.demo-count');
   let sampleIndex = 0;
+
+  function refreshCardLabel() {
+    if (!card) return;
+    const line = word?.textContent || '';
+    const label = card.classList.contains('is-flipped') ? `Show the line again: ${line}` : `File this line: ${line}`;
+    card.setAttribute('aria-label', label);
+  }
 
   function updateCard() {
     const sample = samples[sampleIndex];
@@ -46,13 +57,23 @@
     card.setAttribute('aria-pressed', 'false');
     card.querySelector('.flash-front').setAttribute('aria-hidden', 'false');
     card.querySelector('.flash-back').setAttribute('aria-hidden', 'true');
-    word.textContent = sample.word;
-    type.textContent = sample.type;
-    meaning.textContent = sample.meaning;
-    example.textContent = sample.example;
+    word.textContent = sample.line;
+    sent.textContent = sample.sent || 'Sent from the phone';
+    word.classList.toggle('is-long', sample.line.length > 12);
+    card.classList.toggle('is-held', Boolean(sample.held));
+    title.textContent = sample.held ? 'Held for a question' : `Filed as #${sample.id}`;
+    held.textContent = sample.held || '';
+    grid.hidden = Boolean(sample.held);
+    if (sample.entry) {
+      Object.entries(sample.entry).forEach(([key, value]) => {
+        grid.querySelector(`[data-field="${key}"]`).textContent = value;
+      });
+    }
     count.textContent = `${String(sampleIndex + 1).padStart(2, '0')} / ${String(samples.length).padStart(2, '0')}`;
     refreshCardLabel();
   }
+
+  if (card) updateCard();
 
   card?.addEventListener('click', () => {
     const flipped = card.classList.toggle('is-flipped');
