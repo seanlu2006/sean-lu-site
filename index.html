@@ -99,43 +99,57 @@
         <h2 id="work-title">Work</h2>
       </div>
 
-      <article class="featured-work reveal">
+      <article class="featured-work featured-wide reveal">
         <div class="feature-copy">
-          <p class="project-kicker">Claude Code · Python · iOS Shortcuts</p>
-          <h3>CountAgent</h3>
-          <p class="project-lede">A personal expense agent on Claude Code. Siri appends one line of text; the agent later parses, categorises and deduplicates it. My own expenses have run through it since June 2026.</p>
-          <div class="project-links">
-            <a class="text-link" href="assets/countagent-demo.html">Demo dashboard (sample data)<span aria-hidden="true">↗</span></a>
-            <a class="text-link" href="https://github.com/seanlu2006/CountAgent">GitHub <span aria-hidden="true">↗</span></a>
-          </div>
+          <p class="project-kicker">React · TypeScript · Hono · SQLite</p>
+          <h3>Trade journal</h3>
+          <p class="project-lede">My own trading journal, built to stop paying for TradeZella. It follows TradeZella's pages and workflow, holds my trade history, and adds a replay for practising entries on past gold prices.</p>
+          <p class="feature-aside">The code stays private because my trade data lives next to it.</p>
         </div>
-        <figure class="feature-media">
-          <img src="assets/countagent-dashboard.png" width="2560" height="2000" loading="eager" alt="CountAgent dashboard generated from the project's built-in demo data">
-        </figure>
-        <details class="case-notes">
-          <summary>Read case notes<span class="summary-mark" aria-hidden="true"></span></summary>
-          <dl class="case-grid">
-            <div>
-              <dt>Problem</dt>
-              <dd>The friction in expense apps is input. Open the app, pick a category, type the amount. Three steps and you quit.</dd>
-            </div>
-            <div>
-              <dt>Approach</dt>
-              <dd>Capture shrinks to one sentence. The agent handles interpretation later.</dd>
-            </div>
-            <div>
-              <dt>Budget</dt>
-              <dd>A month runs from the 24th to the 23rd, the credit-card cycle, so the budget matches the bill I actually pay. Quarters are three cycles.</dd>
-            </div>
-            <div>
-              <dt>Trade-off</dt>
-              <dd>Behaviour lives in CLAUDE.md, in plain language rather than code. Rules change without a code change. The price is non-determinism, so a human review step stays.</dd>
-            </div>
+        <div class="feature-facts">
+          <ul class="stat-strip" aria-label="Journal numbers">
+            <li class="stat-dark"><strong>114</strong><span>trades moved over from TradeZella</span></li>
+            <li><strong>7 / 7</strong><span>dashboard stats match TradeZella's</span></li>
+            <li><strong>26</strong><span>strategy rules, each rule's stats match too</span></li>
+            <li><strong>1 min</strong><span>smallest replay step, on Dukascopy prices</span></li>
+          </ul>
+          <dl class="compact-notes">
+            <div><dt>Problem</dt><dd>I liked TradeZella's workflow, not paying a subscription for one account's trades.</dd></div>
+            <div><dt>Approach</dt><dd>Same pages, flow and terms, on a local SQLite file. A check script compares every number with TradeZella's export.</dd></div>
+            <div><dt>Replay</dt><dd>Market, limit and stop orders, SL and TP dragged on the chart, size from risk. If one minute touches both SL and TP, it counts as a stop.</dd></div>
+            <div><dt>Trade-off</dt><dd>Dukascopy candles differ slightly from my broker's, and there is no futures data yet.</dd></div>
+            <div><dt>Role</dt><dd>I wrote the spec from daily use and checked the numbers. Claude Code wrote the code.</dd></div>
           </dl>
-        </details>
+        </div>
+        <figure class="feature-shot">
+          <img src="assets/trade-journal-replay.webp" width="2880" height="964" loading="eager" alt="Replay screen: XAUUSD 5-minute chart with a horizontal line, a 0.05 long position with take-profit and stop-loss lines, and the order panel">
+          <figcaption>Replay session on sample data. No real trades shown.</figcaption>
+        </figure>
       </article>
 
       <div class="project-stack">
+        <article class="project-row project-row-reverse reveal">
+          <div class="project-index" aria-hidden="true">AGENT</div>
+          <div class="project-main">
+            <p class="project-kicker">Claude Code · Python · iOS Shortcuts</p>
+            <h3>CountAgent</h3>
+            <p class="project-lede">I quit every expense app within two weeks. This one stuck: capture is one line to Siri, and the AI only comes in after capture, to parse, categorise and catch duplicates. 454 entries since June 2026.</p>
+            <dl class="compact-notes">
+              <div><dt>Capture</dt><dd>One sentence to Siri appends a line to a text file. No app to open, no category to pick.</dd></div>
+              <div><dt>Duplicates</dt><dd>The same amount and meaning on the same day goes in once. The agent asks instead of guessing.</dd></div>
+              <div><dt>Month</dt><dd>A month runs from the 24th to the 23rd, the card cycle, so the budget matches the bill I pay.</dd></div>
+              <div><dt>Trade-off</dt><dd>Rules live in plain language in CLAUDE.md, not code. Easy to change, not deterministic, so a human review step stays.</dd></div>
+            </dl>
+            <div class="project-links">
+              <a class="text-link" href="assets/countagent-demo.html">Demo dashboard (sample data)<span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="https://github.com/seanlu2006/CountAgent">GitHub <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <figure class="dashboard-preview">
+            <img src="assets/countagent-dashboard.png" width="2560" height="2000" loading="lazy" alt="CountAgent dashboard generated from the project's built-in demo data">
+          </figure>
+        </article>
+
         <article class="project-row project-wide reveal">
           <div class="project-index" aria-hidden="true">GAME</div>
           <div class="project-main">
